@@ -1,4 +1,4 @@
-# RuneEVO64 / Next updates
+# RuneEVO updates
 
 Public feature catalogue comparing PC RuneEVO64 / Next with original Rune.
 
