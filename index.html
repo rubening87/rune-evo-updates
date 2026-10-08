@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="71 PC RuneEVO updates compared with original Rune, with short summaries, detailed implementation notes, recorded verification and remaining scope.">
+  <meta name="description" content="72 PC RuneEVO updates compared with original Rune, with short summaries, detailed implementation notes, recorded verification and remaining scope.">
   <meta name="color-scheme" content="dark">
   <title>RuneEVO — Updates vs original Rune</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23151e21'/%3E%3Ctext x='32' y='47' text-anchor='middle' font-family='Georgia' font-size='46' fill='%23dfbd78'%3ER%3C/text%3E%3C/svg%3E">
@@ -22,7 +22,7 @@
     <p class="eyebrow">PC development catalogue · RuneEVO</p>
     <h1>Updates vs <span>original Rune.</span></h1>
     <p class="intro">The engine upgrades, gameplay additions and authoring tools we have built. Each update has a short overview and a detailed description with its recorded results and remaining scope.</p>
-    <ul class="snapshot" aria-label="Catalogue snapshot"><li><strong>71</strong> updates</li><li><strong>12</strong> topics</li><li>Snapshot: <time datetime="2026-10-08">8 October 2026</time></li></ul>
+    <ul class="snapshot" aria-label="Catalogue snapshot"><li><strong>72</strong> updates</li><li><strong>12</strong> topics</li><li>Snapshot: <time datetime="2026-10-08">8 October 2026</time></li></ul>
   </div></header>
   <div class="wrap layout">
     <aside class="sidebar" aria-label="Catalogue navigation"><p class="sidebar-label">Browse by topic</p><nav class="topics" aria-label="Topics" id="topics"></nav><p class="scope-note">Includes the earlier EVO64 foundation and newer Next work. Some entries restore original Rune behavior in the rebuilt engine. Prototype and separate-project work are labelled; backlog-only ideas are excluded.</p></aside>
@@ -114,6 +114,16 @@
   },
   {
     "id": 9,
+    "title": "UnrealScript dynamic arrays",
+    "status": "Implemented",
+    "brief": "Scripts can grow and shrink runtime-sized arrays, append values, and insert or remove ranges.",
+    "detail": "RuneEVO includes UnrealScript dynamic-array operations in both the compiler and the native script runtime. Scripts can declare array<T> variables, index their elements, read or assign .Length, append a value with .Add(value), and change ranges with .Insert(index,count) or .Remove(index,count). This capability belongs to the earlier EVO64 foundation and was missing from the first catalogue.",
+    "implementation": "The compiler emits dedicated array bytecode, the package serializer recognizes those instructions, and the virtual machine executes them against reflected array properties. Setting .Length resizes the array; .Add(value) appends one element and returns its index. Newly inserted storage is zeroed, and removed strings or other constructed values receive property-level cleanup.",
+    "evidence": "Source inspection confirmed the matching compiler, bytecode-serialization and runtime handlers in this checkout. These operations are already present in the earliest local source checkpoint. This catalogue correction does not represent a new engine implementation or a new runtime test pass.",
+    "limits": "No dedicated runtime dynamic-array regression was located in the current test tree. Array replication, every element type and advanced methods beyond the listed operations have not been certified by this review. In this implementation, .Add takes a value to append."
+  },
+  {
+    "id": 10,
     "title": "Fixed directional sunlight",
     "status": "Prototype",
     "brief": "Sunlight can bake world shadows and illuminate actors consistently with sun and shade.",
@@ -123,7 +133,7 @@
     "limits": "The sun is fixed. Moving day/night sunlight and a new real-time shadow system were excluded from this slice; broader maps, moving brushes and older hardware remain unverified."
   },
   {
-    "id": 10,
+    "id": 11,
     "title": "Shadow controls",
     "status": "Prototype",
     "brief": "Choose player shadows, all skeletal shadows, blob shadows or no shadows in the extended video menu.",
@@ -133,7 +143,7 @@
     "limits": "All-skeletal does not include every legacy vertex mesh. Proposed 32/64/128 budgets, richer quality controls and broad crowded-map performance validation remain separate work."
   },
   {
-    "id": 11,
+    "id": 12,
     "title": "Pickup outlines",
     "status": "Prototype",
     "brief": "Optional gold, cyan or purple highlighting helps identify an aimed or nearby pickup.",
@@ -143,7 +153,7 @@
     "limits": "General teammate/actor marking, CPU-only or vertex-mesh contours, masked materials and portal/mirror/MSAA/device-reset coverage remain unfinished. Frame cost is not broadly certified."
   },
   {
-    "id": 12,
+    "id": 13,
     "title": "PNG transparency pipeline",
     "status": "Implemented",
     "brief": "True-colour PNG imports retain smooth transparency through BC3, with a paletted fallback.",
@@ -153,7 +163,7 @@
     "limits": "D3D9 needs S3TC support/settings for the BC3 copy. BatchExport shows the quantized compatibility image, so original PNGs must be retained for accurate alpha authoring."
   },
   {
-    "id": 13,
+    "id": 14,
     "title": "Font support and UI fonts",
     "status": "Restored",
     "brief": "TrueType import is available for original-style font objects and newer UI artwork.",
@@ -163,7 +173,7 @@
     "limits": "This is baked font import, not a new vector-text renderer or unlimited runtime scaling. Original Rune already had a TrueType-based font system; this entry includes restoration and its use by the new UI."
   },
   {
-    "id": 14,
+    "id": 15,
     "title": "Two-sided skeletal materials",
     "status": "Restored",
     "brief": "Thin skeletal surfaces now honour texture and polygon-group two-sided flags.",
@@ -173,7 +183,7 @@
     "limits": "This preserves existing normals/lighting and adds no thickness. It is a visibility repair, not a new two-sided material-lighting model."
   },
   {
-    "id": 15,
+    "id": 16,
     "title": "Correct skeletal attachments",
     "status": "Restored",
     "brief": "Weapons and attached effects follow the evaluated animated joints correctly.",
@@ -183,7 +193,7 @@
     "limits": "The fixes target reconstructed-engine regressions. Arbitrary custom rigs and every nested attachment/effect combination still need their own coverage."
   },
   {
-    "id": 16,
+    "id": 17,
     "title": "Stowed weapon rendering fixes",
     "status": "Restored",
     "brief": "Displaced inventory stays hidden, and attached weapons receive lighting from their current location.",
@@ -193,7 +203,7 @@
     "limits": "Focused standalone and one-owner connected checks cover the reported sequence. Broader maps/renderers and the complete manual multiplayer scenario remain unverified."
   },
   {
-    "id": 17,
+    "id": 18,
     "title": "Smoother animation transitions",
     "status": "Prototype",
     "brief": "Interrupted blends preserve continuity, with Legacy, Continuous and Smooth comparison modes.",
@@ -203,7 +213,7 @@
     "limits": "Authored crouched/upright gait height changes are distinct from tween bugs. Gait phase, full weapon coverage, prolonged gameplay and adverse-network feel still require review."
   },
   {
-    "id": 18,
+    "id": 19,
     "title": "Separate animation packs",
     "status": "Implemented",
     "brief": "Reusable animation-only libraries can drive compatible character rigs without dummy geometry.",
@@ -213,7 +223,7 @@
     "limits": "General retargeting, arbitrary new weighted bones and full normal-player/combat adoption are not complete. Sharing bone names alone does not establish compatible motion."
   },
   {
-    "id": 19,
+    "id": 20,
     "title": "Networked animation-pack playback",
     "status": "Implemented",
     "brief": "Compatible clients download, cache and synchronize shared animation libraries, including late joins.",
@@ -223,7 +233,7 @@
     "limits": "These are playback/delivery results, not finished combat animation networking or universal Internet certification. Larger/live manifests and normal gameplay integration remain follow-ups."
   },
   {
-    "id": 20,
+    "id": 21,
     "title": "Optional accessory animation tracks",
     "status": "Implemented",
     "brief": "One shared body pack can also animate supported character-specific accessories.",
@@ -233,7 +243,7 @@
     "limits": "This does not add independently weighted runtime bones to an arbitrary existing mesh. Expanded substitute-primary support and unrelated rig families remain separate design work."
   },
   {
-    "id": 21,
+    "id": 22,
     "title": "Native bone dynamics",
     "status": "Prototype",
     "brief": "Cosmetic springs add secondary movement to weighted hair, tails and cloth-like chains.",
@@ -243,7 +253,7 @@
     "limits": "The feature is cosmetic and is not a cloth, rigid-body or PhysX integration. Self/world collision, contacts and broader preset replication/lifecycle coverage remain unfinished."
   },
   {
-    "id": 22,
+    "id": 23,
     "title": "UnrealScript replication notifications",
     "status": "Implemented",
     "brief": "Opt-in repnotify properties can trigger OnRepNotify when their replicated values arrive.",
@@ -253,7 +263,7 @@
     "limits": "Notification is not an authority or delivery guarantee. Broader property combinations and integration scenarios remain in the backlog."
   },
   {
-    "id": 23,
+    "id": 24,
     "title": "Native joint-control API",
     "status": "Implemented",
     "brief": "Scripts can rotate bones, aim them at world points and inspect their evaluated directions.",
@@ -263,7 +273,7 @@
     "limits": "Controls do not replicate automatically and must be reapplied while active. The mech explicitly distributes aim cues; the generic API is not full limb inverse kinematics."
   },
   {
-    "id": 24,
+    "id": 25,
     "title": "Modular characters",
     "status": "Prototype",
     "brief": "Build a character from independently selected head, torso, arm and leg parts.",
@@ -273,7 +283,7 @@
     "limits": "The current catalog targets compatible Ragnar rigs and full-detail modular geometry. Arbitrary custom models, broad seams/animation coverage and many-player cost remain open."
   },
   {
-    "id": 25,
+    "id": 26,
     "title": "Expanded character menu",
     "status": "Prototype",
     "brief": "Choose parts in a live preview, save locally and use the saved appearance when joining.",
@@ -283,7 +293,7 @@
     "limits": "Capability negotiation, all relevance/travel scenarios and broader adverse-network menu/appearance coverage remain unfinished. New body catalogs need their own validation."
   },
   {
-    "id": 26,
+    "id": 27,
     "title": "Adjustable body proportions",
     "status": "Prototype",
     "brief": "Change limb lengths, shoulders, neck and head size, including exaggerated experimental ranges.",
@@ -293,7 +303,7 @@
     "limits": "Final server-configurable per-control limits, complete reach/contact policy, asymmetry and arbitrary custom-body registration remain open. Exaggerated shapes are not a PvP balance decision."
   },
   {
-    "id": 27,
+    "id": 28,
     "title": "Individual bone thickness",
     "status": "Prototype",
     "brief": "Adjust supported body regions and weighted joints without stretching their child chains.",
@@ -303,7 +313,7 @@
     "limits": "Broader animation/seam inspection, gameplay fitting and final server range policy remain pending. This is not a general sculpting or arbitrary mesh-editing system."
   },
   {
-    "id": 28,
+    "id": 29,
     "title": "Proportional collision",
     "status": "Prototype",
     "brief": "Skeletal hit hulls follow customized bodies, with visual collision inspection.",
@@ -313,7 +323,7 @@
     "limits": "Broad AI navigation, constrained spawns, contacts/combat coverage and final server shape limits remain open. Permission and balance for altered PvP bodies are undecided."
   },
   {
-    "id": 29,
+    "id": 30,
     "title": "Wearable attachments",
     "status": "Prototype",
     "brief": "Fit and save a Goblin mask using position, rotation and size controls.",
@@ -323,7 +333,7 @@
     "limits": "Multiple wearable slots, donor-specific fit presets, helmets/capes/skirts, deformation, cloth, clipping rules and many-player/LOD performance are follow-up work."
   },
   {
-    "id": 30,
+    "id": 31,
     "title": "Modular damage and death handling",
     "status": "Prototype",
     "brief": "Mixed bodies can lose selected parts, expose gore caps and settle their corpses on peers.",
@@ -333,7 +343,7 @@
     "limits": "Complete death/gore/skin sequences, authored-map contacts and broad combat remain unfinished. These bounded results do not close every modular playable-integration task."
   },
   {
-    "id": 31,
+    "id": 32,
     "title": "Controller/body separation groundwork",
     "status": "Prototype",
     "brief": "A controller bridge and body policies separate player intent from supported creature-specific behavior.",
@@ -343,7 +353,7 @@
     "limits": "Persistent independent controllers, arbitrary-creature possession, AI handoff and a broader native/replication migration remain future work. Ruben deferred further possession work in favor of networking."
   },
   {
-    "id": 32,
+    "id": 33,
     "title": "Movement-networking experiments",
     "status": "Prototype",
     "brief": "Selectable buffering/send policies and UT99 v469-inspired saved moves run with Rune physics.",
@@ -353,7 +363,7 @@
     "limits": "Exact native v469 parity, full UDK-style restore/resimulation, remote smoothing, bandwidth, jitter/reordering and adversarial speed coverage are unfinished. This is not finished multiplayer netcode."
   },
   {
-    "id": 33,
+    "id": 34,
     "title": "Rope movement improvements",
     "status": "Prototype",
     "brief": "Predict grabs, climb with W/S and release using jump, Use or Duck with current facing.",
@@ -363,7 +373,7 @@
     "limits": "Manual Hildir feel and observer visuals remain pending. One high-impairment observer-facing run exceeded its acknowledgement-age gate, so that setting is not fully verified."
   },
   {
-    "id": 34,
+    "id": 35,
     "title": "BSP ledge-climb improvements",
     "status": "Prototype",
     "brief": "Local grabs start sooner, and torso/leg climb clips stay aligned through correction and exit.",
@@ -373,7 +383,7 @@
     "limits": "This does not automatically solve every authored Hildir ledge or creature pull-up animation. Manual camera-angle review and broader maps remain open."
   },
   {
-    "id": 35,
+    "id": 36,
     "title": "Remote-player animation fixes",
     "status": "Prototype",
     "brief": "Corrected facing, crouch offsets, pain recovery and return-to-idle behavior in the extension player.",
@@ -383,7 +393,7 @@
     "limits": "The exact original manual hit/view needs broader review, and packet loss can still lose an individual cosmetic reaction. The fixes are in the separate ControlledPlayer path."
   },
   {
-    "id": 36,
+    "id": 37,
     "title": "Reconnect networking fix",
     "status": "Implemented",
     "brief": "A departed client's UDP error no longer blocks receiving active players' packets.",
@@ -393,7 +403,7 @@
     "limits": "This removes one reproduced networking blocker. It does not establish complete correction, bandwidth, jitter/reordering or Internet behavior for every new feature."
   },
   {
-    "id": 37,
+    "id": 38,
     "title": "Lever interaction recovery",
     "status": "Prototype",
     "brief": "Fixed a reproduced dedicated-server lever-use lock in the private controller extension.",
@@ -403,7 +413,7 @@
     "limits": "The lever repair does not explain every earlier input symptom. It also does not implement lever-operated gate traversal for navigation bots; that provider is still proposed."
   },
   {
-    "id": 38,
+    "id": 39,
     "title": "Runtime mirrored maps",
     "status": "Prototype",
     "brief": "Load or host maps as Normal, X-mirrored or Y-mirrored without editing their original assets.",
@@ -413,7 +423,7 @@
     "limits": "Campaign scripts, asymmetric props, AI paths, maplists, save/hub behavior, adverse-network travel and real LAN/Internet sessions remain follow-up coverage."
   },
   {
-    "id": 39,
+    "id": 40,
     "title": "Playable woodland dwarf",
     "status": "Prototype",
     "brief": "Select the dwarf in the player menu and use its native movement, combat and equipment.",
@@ -423,7 +433,7 @@
     "limits": "Manual feel, broad combat/observer/death coverage and automatic human-to-creature invasion rules remain open. Arbitrary monster possession is not implemented."
   },
   {
-    "id": 40,
+    "id": 41,
     "title": "Dwarf equipment and abilities",
     "status": "Prototype",
     "brief": "One-handed weapon attacks, shield retention, forward shield push, jumping and ledge climbing.",
@@ -433,7 +443,7 @@
     "limits": "Manual combat feel and wider observer integration remain pending. Stronger throws, look-pitch-dependent push, a whole-body native/Ragnar toggle and a reported long-pullup visual remain backlog items."
   },
   {
-    "id": 41,
+    "id": 42,
     "title": "Ragnar-animation dwarf variant",
     "status": "Prototype",
     "brief": "A separate dwarf form shares rest-relative Ragnar locomotion and weapon-specific attacks.",
@@ -443,7 +453,7 @@
     "limits": "Full multiplayer integration and Ruben's manual feel review remain unfinished. This is a bounded dwarf experiment, not general retargeting for every creature."
   },
   {
-    "id": 42,
+    "id": 43,
     "title": "Playable dwarfmech",
     "status": "Prototype",
     "brief": "Control five native attack modes, attack while moving and plant or unplant the mech.",
@@ -453,7 +463,7 @@
     "limits": "The mech has no native jump/climb clip, so those actions are disabled. Broader arm severing, listen/Internet play, combat balance and final split-pose visual review remain unfinished."
   },
   {
-    "id": 43,
+    "id": 44,
     "title": "Mech aiming and camera",
     "status": "Prototype",
     "brief": "Aim both wrists at the crosshair from a wall-aware shoulder camera, with self-hit guards.",
@@ -463,7 +473,7 @@
     "limits": "The exact original self-damage report was not reproduced in its initial moving-attack context. The exposed stock dispatch path was fixed; broader observer/armour/severing cases and final camera feel remain open."
   },
   {
-    "id": 44,
+    "id": 45,
     "title": "15-weapon selection wheel",
     "status": "Prototype",
     "brief": "Hold Q to choose an illustrated carried weapon, with gold or ice presentation.",
@@ -473,7 +483,7 @@
     "limits": "The wheel is in a separate private script package. Physical feel, observers and broader renderer/map coverage remain follow-up work; a sharing copy does not certify original Rune 1.06."
   },
   {
-    "id": 45,
+    "id": 46,
     "title": "Live 3D wheel previews",
     "status": "Prototype",
     "brief": "Actual weapon meshes float gently in the centre, with saved per-weapon framing controls.",
@@ -483,7 +493,7 @@
     "limits": "The framing editor does not change the wedge illustration. The explicit authoring mode may show unowned meshes, while ordinary gameplay remains inventory-only. Other rendering backends remain unverified."
   },
   {
-    "id": 46,
+    "id": 47,
     "title": "Weapon-selection queue and pain recovery",
     "status": "Prototype",
     "brief": "The latest owned choice waits for legal equip timing and survives supported pain interruptions.",
@@ -493,7 +503,7 @@
     "limits": "Observer visuals and manual feel remain pending. The historical late-hit unusable-weapon symptom was not reproduced by the baseline fixture, so that exact failure is not claimed fixed."
   },
   {
-    "id": 47,
+    "id": 48,
     "title": "Animated kill-feed prototype",
     "status": "Prototype",
     "brief": "Portrait/name/cause rows arrive, stack and expire with independently timed effects; events are synthetic.",
@@ -503,7 +513,7 @@
     "limits": "Real death, killer/victim/team/avatar attribution, authoritative headshot/cause routing and multiplayer are not connected yet. This is a rendering demonstration, not a live match kill feed."
   },
   {
-    "id": 48,
+    "id": 49,
     "title": "Kill-feed themes and icons",
     "status": "Prototype",
     "brief": "Six colours, black/coloured panels, 15 weapon pairs, spinning throws and headshot/environment icons.",
@@ -513,7 +523,7 @@
     "limits": "Icons/themes currently present synthetic metadata. New pose choices require rebaking/rebuilding private textures; palette changes load on launch. Real team/cause/headshot attribution remains pending."
   },
   {
-    "id": 49,
+    "id": 50,
     "title": "External UI authoring tools",
     "status": "Tooling",
     "brief": "Review animations in a browser and save shared settings, palettes and independent icon poses.",
@@ -523,7 +533,7 @@
     "limits": "A browser change is not automatically running-game hot reload. Pose edits require native asset rebuilds; palette/settings are read on the documented launch path. Future design changes retain the HTML review workflow."
   },
   {
-    "id": 50,
+    "id": 51,
     "title": "Portrait and weapon-art pipeline",
     "status": "Tooling",
     "brief": "Native captures, stylized assets and review catalogues organize the UI artwork.",
@@ -533,7 +543,7 @@
     "limits": "The full portrait roster and wider HUD/team-score layout are unfinished. A decoded or catalogued image is not automatically final visual approval, and original source artwork remains local."
   },
   {
-    "id": 51,
+    "id": 52,
     "title": "Native Recast/Detour navigation",
     "status": "Prototype",
     "brief": "Build a clearance-aware navmesh from Rune geometry and query complete walking routes.",
@@ -543,7 +553,7 @@
     "limits": "Builds are synchronous and currently use one profile per level. General tiled/offline caching, dynamic obstacle providers, multiple agent sizes and multiplayer AI integration remain future work."
   },
   {
-    "id": 52,
+    "id": 53,
     "title": "Autonomous bot journeys",
     "status": "Prototype",
     "brief": "Bots combine walking, safe falls/jumps, supported lifts and proximity doors to reach real destinations.",
@@ -553,7 +563,7 @@
     "limits": "These are bounded standalone explorer bots, without tactical combat, inventory or crowd separation. Lever providers, general moving platforms and unsupported map components remain outside the slice."
   },
   {
-    "id": 53,
+    "id": 54,
     "title": "Improved bot steering",
     "status": "Prototype",
     "brief": "Normal run speed, validated lookahead and gradual turning replace repeated corner slowdowns.",
@@ -563,7 +573,7 @@
     "limits": "This is local path following, not general live-obstacle replanning or crowd avoidance. Tight geometry and traversal entries can still require controlled slowing."
   },
   {
-    "id": 54,
+    "id": 55,
     "title": "Authored traversal prototype",
     "status": "Prototype",
     "brief": "A demonstrated Hildir climb can continue onto a locally validated narrow beam.",
@@ -573,7 +583,7 @@
     "limits": "Automatic full-map climb discovery, a global thin-floor graph, reverse-climb links and persistence of multiple authored traversal types remain proposed work."
   },
   {
-    "id": 55,
+    "id": 56,
     "title": "Navigation inspection tools",
     "status": "Tooling",
     "brief": "Inspect meshes/routes, follow bots or play normally, and record player traversal demonstrations.",
@@ -583,7 +593,7 @@
     "limits": "Recordings are developer evidence, not a finished multi-action authoring database. The visible trail is bounded, and recordings do not automatically authorize all discovered movement links."
   },
   {
-    "id": 56,
+    "id": 57,
     "title": "Surf game mode",
     "status": "Prototype",
     "brief": "CS-inspired ramp surfing and air strafing with tuning presets, run timing and session records.",
@@ -593,7 +603,7 @@
     "limits": "The presets are independently implemented comparisons, not exact CS2/subtick physics. Session records are not persistent, and a future custom surfing animation is still pending."
   },
   {
-    "id": 57,
+    "id": 58,
     "title": "Four original Surf courses",
     "status": "Prototype",
     "brief": "First Flight, Switchback, Cavern Curves and Grand Circuit provide increasingly complex routes.",
@@ -603,7 +613,7 @@
     "limits": "Manual difficulty/flow review is still requested. Motion-first random feasible course generation remains a proposed next step; the existing generator does not guarantee arbitrary random geometry is playable."
   },
   {
-    "id": 58,
+    "id": 59,
     "title": "Surf multiplayer",
     "status": "Prototype",
     "brief": "Server-authoritative surfing includes client prediction, replay and authoritative finish records.",
@@ -613,7 +623,7 @@
     "limits": "The launcher binds loopback, and records last for the session. Public Internet deployment, large player counts, downloads and broader adversarial validation are not certified by those local fixtures."
   },
   {
-    "id": 59,
+    "id": 60,
     "title": "Portal prototype",
     "status": "Prototype",
     "brief": "Paired live portal views support wall, floor and ceiling traversal with recursive rendering.",
@@ -623,7 +633,7 @@
     "limits": "Server-authoritative/network integration, broad particle/translucent rendering, third-person split/clipped bodies and recursive-view performance polish remain unfinished."
   },
   {
-    "id": 60,
+    "id": 61,
     "title": "Native voxel sandbox",
     "status": "Prototype",
     "brief": "Editable block terrain has collision, chunk streaming, background generation and saved edits.",
@@ -633,7 +643,7 @@
     "limits": "Development is paused and the command path is standalone-only. Host authority, edit/chunk synchronization, late-join transfer, multiplayer rebasing and general AI support remain unimplemented."
   },
   {
-    "id": 61,
+    "id": 62,
     "title": "Large voxel environments",
     "status": "Prototype",
     "brief": "Separate island, woodland, alpine and Lantern Grove worlds include distant horizons and origin shifting.",
@@ -643,7 +653,7 @@
     "limits": "This is bounded terrain, not an infinite world or complete distant 3D voxel LOD. Large radii have loading/memory costs, and multiplayer origin handling is absent."
   },
   {
-    "id": 62,
+    "id": 63,
     "title": "Voxel lighting and scenery",
     "status": "Prototype",
     "brief": "Skylight, torches, day/night, foliage, stars, clouds and narrow lantern/timber props.",
@@ -653,7 +663,7 @@
     "limits": "Fog is distance fog, not volumetric lighting. Terrain/tree cast sun shadows, flowing fluids, saved weather/clock and old-PC quality budgets remain future work."
   },
   {
-    "id": 63,
+    "id": 64,
     "title": "Modern editor tools",
     "status": "Tooling",
     "brief": "RuneEd64 and the ImGui RuneEdShell provide native editing plus a local MCP interface.",
@@ -663,7 +673,7 @@
     "limits": "This is not the proposed complete skeletal editor or FBX pipeline. Later editor-shell migration work is tracked separately from this development snapshot."
   },
   {
-    "id": 64,
+    "id": 65,
     "title": "Blender level-editing bridge",
     "status": "Tooling",
     "brief": "Read/edit Rune brushes in Blender and use the native engine to rebuild and save maps.",
@@ -673,7 +683,7 @@
     "limits": "The documented bridge baseline does not finish texture assignment for every new face, general actor editing, lightmap authoring, a Blender app template or a UCC panel."
   },
   {
-    "id": 65,
+    "id": 66,
     "title": "SCM character-fitting tools",
     "status": "Tooling",
     "brief": "Fit a connected editing rig to a new body, mirror it and prepare a Rune-compatible reference copy.",
@@ -683,7 +693,7 @@
     "limits": "The current manual-fit/cuboid workflow is not proof that arbitrary custom bodies are registered for gameplay. Final complex-body weights, game appearance, combat hulls and multiplayer need their own checks."
   },
   {
-    "id": 66,
+    "id": 67,
     "title": "Skin-weight inspection and cleanup",
     "status": "Tooling",
     "brief": "Inspect connected influences, select unwanted patches and prepare supported weights without losing the working paint.",
@@ -693,7 +703,7 @@
     "limits": "Automatic cleanup does not replace manual facial islands, seams and animation-quality review. Optional previews are not silently adopted by Prepare, and runtime four-influence support remains unimplemented."
   },
   {
-    "id": 67,
+    "id": 68,
     "title": "Animation inspection labs",
     "status": "Tooling",
     "brief": "Browse all 612 Ragnar catalogue entries, step frames and compare dwarf/mech poses and LODs.",
@@ -703,7 +713,7 @@
     "limits": "Viewers are cosmetic authoring tools. Saved punch/kick candidates do not implement the proposed FIST weapon, and the animation-lab clock does not solve general high-FPS Slomo."
   },
   {
-    "id": 68,
+    "id": 69,
     "title": "Asset correctness fixes",
     "status": "Restored",
     "brief": "Repaired substitute sampling/materials, attachment behavior and saved skeletal animation events.",
@@ -713,7 +723,7 @@
     "limits": "These repair known asset compatibility paths; they do not establish unrestricted skeleton conversion, arbitrary extra weighted bones or full custom-content import coverage."
   },
   {
-    "id": 69,
+    "id": 70,
     "title": "Original-content compatibility repairs",
     "status": "Restored",
     "brief": "Restored important networking, cinematic, lighting, rope, combat and menu behavior in the x64 port.",
@@ -723,7 +733,7 @@
     "limits": "Historical original-server checks do not certify every newer extension. Longer online/menu gameplay and audio acceptance were not completed by those compatibility fixtures."
   },
   {
-    "id": 70,
+    "id": 71,
     "title": "Development and verification tooling",
     "status": "Tooling",
     "brief": "Isolated launchers, native probes, captures and package checks make changes reproducible and reviewable.",
@@ -733,7 +743,7 @@
     "limits": "Passing a bounded fixture is not equivalent to full-game or public-server certification. Owned content, private captures, generated packages and runtime DLLs remain local and are not a distributable release."
   },
   {
-    "id": 71,
+    "id": 72,
     "title": "Separate UT2004 world-architecture experiments",
     "status": "Separate experiment",
     "brief": "Private fixtures run Rune gameplay on imported compiled-world data and compare rendering/collision behavior.",
@@ -747,12 +757,12 @@
   <script>
     "use strict";
     const groups=[
-      ["engine","Engine & performance",1,8],["graphics","Graphics & animation",9,17],
-      ["animation","Animation systems",18,23],["characters","Modular characters",24,30],
-      ["movement","Movement & networking",31,38],["creatures","Playable creatures",39,43],
-      ["interface","Interface & artwork",44,50],["navigation","Bot navigation",51,55],
-      ["surf","Surf mode",56,58],["worlds","Portals & voxel worlds",59,62],
-      ["tools","Editors & authoring",63,67],["compatibility","Compatibility & research",68,71]
+      ["engine","Engine & performance",1,9],["graphics","Graphics & animation",10,18],
+      ["animation","Animation systems",19,24],["characters","Modular characters",25,31],
+      ["movement","Movement & networking",32,39],["creatures","Playable creatures",40,44],
+      ["interface","Interface & artwork",45,51],["navigation","Bot navigation",52,56],
+      ["surf","Surf mode",57,59],["worlds","Portals & voxel worlds",60,63],
+      ["tools","Editors & authoring",64,68],["compatibility","Compatibility & research",69,72]
     ];
     const kind={Implemented:"implemented",Prototype:"prototype",Restored:"restored",Tooling:"tooling","Separate experiment":"separate"};
     const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
