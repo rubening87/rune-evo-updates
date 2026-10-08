@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="71 PC RuneEVO64 / Next updates compared with original Rune, with short summaries, detailed implementation notes, recorded verification and remaining scope.">
+  <meta name="color-scheme" content="dark">
+  <title>RuneEVO64 / Next — Updates vs original Rune</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23151e21'/%3E%3Ctext x='32' y='47' text-anchor='middle' font-family='Georgia' font-size='46' fill='%23dfbd78'%3ER%3C/text%3E%3C/svg%3E">
+  <style>
+    :root{--bg:#0e1416;--surface:#151e21;--surface-2:#1a272b;--text:#edf1ee;--muted:#adbcb7;--line:#2d3e41;--gold:#dfbd78;--cyan:#91d5d0;--max:1280px;color-scheme:dark;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;font-size:16px}
+    *{box-sizing:border-box}html{scroll-padding-top:1.5rem}body{margin:0;background:var(--bg);color:var(--text);line-height:1.6}button,a{-webkit-tap-highlight-color:transparent}a{color:var(--cyan);text-underline-offset:.2em}a:hover{color:var(--text)}:focus-visible{outline:3px solid var(--gold);outline-offset:5px;border-radius:3px}button{font:inherit}.skip{position:absolute;top:-5rem;left:1rem;background:var(--gold);color:var(--bg);padding:.65rem 1rem;z-index:10}.skip:focus{top:1rem}.wrap{max-width:var(--max);margin:auto;padding:0 3rem}
+    .masthead{padding:3rem 0 2.5rem;border-bottom:1px solid var(--line);background:linear-gradient(115deg,#19272b 0%,#0e1416 70%)}.eyebrow{margin:0 0 1rem;color:var(--gold);font-weight:650;font-size:.875rem;letter-spacing:.13em;text-transform:uppercase}h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(2.1rem,4.7vw,3.7rem);line-height:1.13;letter-spacing:-.025em;margin:0 0 1rem;max-width:940px}h1 span{color:var(--gold)}.intro{max-width:780px;margin:0;color:var(--muted);font-size:1.0625rem}.snapshot{display:flex;flex-wrap:wrap;gap:.65rem 1.4rem;margin:1.5rem 0 0;padding:0;list-style:none;color:var(--text);font-size:.875rem}.snapshot strong{color:var(--gold);font-size:1rem}.layout{display:grid;grid-template-columns:205px minmax(0,1fr);gap:3rem;align-items:start;padding-top:2.5rem;padding-bottom:4rem}.sidebar{position:sticky;top:1.5rem}.sidebar-label{margin:0 0 .8rem;font-size:.875rem;font-weight:650;color:var(--muted)}.topics{display:grid;gap:.25rem}.topics a{display:flex;justify-content:space-between;gap:.6rem;padding:.5rem .65rem;text-decoration:none;font-size:.875rem;border-left:2px solid var(--line);color:var(--muted)}.topics a:hover,.topics a:focus-visible{background:var(--surface-2);border-left-color:var(--gold);color:var(--text)}.topic-count{color:var(--gold);font-variant-numeric:tabular-nums}.scope-note{font-size:.875rem;color:var(--muted);margin:1.6rem 0 0;padding-top:1rem;border-top:1px solid var(--line)}main{min-width:0}.section{margin-bottom:2.6rem;scroll-margin-top:1.5rem}.section-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.9rem}.section h2{font-size:1.5rem;font-weight:600;line-height:1.25;margin:0}.section-range{color:var(--muted);font-size:.875rem;white-space:nowrap}.feature{display:grid;grid-template-columns:2.5rem minmax(0,1fr);column-gap:.9rem;padding:1.35rem 1.5rem;background:var(--surface);border:1px solid var(--line);border-radius:7px;margin:.7rem 0}.number{font-size:.875rem;color:var(--gold);font-weight:650;font-variant-numeric:tabular-nums;padding-top:.14rem}.feature-top{display:flex;align-items:start;justify-content:space-between;gap:.85rem}.feature h3{font-weight:600;font-size:1.125rem;line-height:1.4;margin:0}.badge{font-size:.75rem;line-height:1.5;border:1px solid #405355;border-radius:4px;padding:.15rem .45rem;white-space:nowrap;color:#c8d6d1}.badge[data-kind="prototype"]{color:#edd3a1;border-color:#6a5738;background:#332b20}.badge[data-kind="restored"]{color:#acdad4;border-color:#3b615e;background:#1a302e}.badge[data-kind="tooling"]{color:#bbcde5;border-color:#415773;background:#202c3c}.badge[data-kind="separate"]{color:#d5c6e9;border-color:#635372;background:#30283a}.brief{margin:.55rem 0 .85rem;color:var(--muted);font-size:1rem;line-height:1.6}.detail-toggle{display:inline-flex;align-items:center;justify-content:space-between;gap:1rem;min-height:44px;border:1px solid #52656a;border-radius:5px;background:transparent;color:var(--text);padding:.45rem .8rem;cursor:pointer;font-size:.875rem;font-weight:600}.detail-toggle:hover,.detail-toggle[aria-expanded="true"]{border-color:var(--gold);color:var(--gold);background:#252a24}.toggle-symbol{font-size:1.1rem;line-height:1;width:.85rem;text-align:center}.detail{margin-top:1.15rem;border-top:1px solid var(--line);padding-top:1.15rem}.detail h4{margin:0 0 .35rem;font-size:.875rem;font-weight:650;color:var(--gold)}.detail p{margin:0 0 1rem;line-height:1.7;overflow-wrap:anywhere}.detail-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.2rem}.detail-grid p{font-size:.9375rem;color:#c6d2cd}.source-list{display:flex;flex-wrap:wrap;gap:.4rem 1rem;font-size:.875rem;margin:0;padding:0;list-style:none}.source-list a{overflow-wrap:anywhere}.source-label{color:var(--muted);font-size:.875rem;font-weight:600;margin:.2rem 0 .35rem}.footer{border-top:1px solid var(--line);padding:1.5rem 0 2rem;color:var(--muted);font-size:.875rem}.footer p{margin:.35rem 0}.footer a{margin-right:1rem}.fatal{padding:2rem;border:1px solid var(--gold);margin:2rem 0;color:var(--gold)}
+    @media(max-width:1050px){.wrap{padding:0 1.5rem}.layout{grid-template-columns:175px minmax(0,1fr);gap:1.5rem}.feature{padding:1.15rem}.feature-top{flex-wrap:wrap;gap:.5rem}.detail-grid{grid-template-columns:1fr;gap:0}.section h2{font-size:1.35rem}}
+    @media(max-width:720px){.masthead{padding:2rem 0 1.8rem}.layout{display:block;padding-top:1.4rem}.sidebar{position:static;margin-bottom:1.8rem}.topics{display:flex;flex-wrap:wrap;gap:.4rem}.topics a{border:1px solid var(--line);border-radius:4px;padding:.4rem .65rem;gap:.6rem}.scope-note{margin:1rem 0 0;padding-top:.8rem}.feature{grid-template-columns:1.8rem minmax(0,1fr);column-gap:.6rem;padding:1rem .9rem}.section-range{font-size:.8125rem}.section-header{gap:.6rem}.snapshot{gap:.45rem 1rem}.wrap{padding:0 1rem}.feature h3{font-size:1.0625rem}.badge{font-size:.75rem}.detail-toggle{max-width:100%;text-align:left}.section{margin-bottom:2rem}}
+    @media print{html{color-scheme:light}body{background:white;color:#111;font-size:10pt}.wrap{max-width:none;padding:0}.masthead{background:none;padding:0 0 1rem;border-color:#999}h1{font-size:24pt}.eyebrow,h1 span,.number,.snapshot strong,.detail h4{color:#4c3c1b}.intro,.brief,.detail-grid p,.footer,.section-range{color:#333}.layout{display:block;padding:1rem 0}.sidebar,.detail-toggle,.skip{display:none}.feature{background:white;border-color:#ccc;break-inside:avoid;margin:.7rem 0}.detail[hidden]{display:block!important}.detail{border-color:#ccc}.badge{color:#222!important;background:none!important;border-color:#888!important}.detail-grid{display:block}a{color:#222}.section{margin-bottom:1.5rem}.source-list{font-size:8pt}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#updates">Skip to updates</a>
+  <header class="masthead"><div class="wrap">
+    <p class="eyebrow">PC development catalogue · RuneEVO64 / Next</p>
+    <h1>Updates vs <span>original Rune.</span></h1>
+    <p class="intro">The engine upgrades, gameplay additions and authoring tools we have built. Each update has a short overview and a detailed description with its recorded results and remaining scope.</p>
+    <ul class="snapshot" aria-label="Catalogue snapshot"><li><strong>71</strong> updates</li><li><strong>12</strong> topics</li><li>Snapshot: <time datetime="2026-10-08">8 October 2026</time></li></ul>
+  </div></header>
+  <div class="wrap layout">
+    <aside class="sidebar" aria-label="Catalogue navigation"><p class="sidebar-label">Browse by topic</p><nav class="topics" aria-label="Topics" id="topics"></nav><p class="scope-note">Includes the earlier EVO64 foundation and newer Next work. Some entries restore original Rune behavior in the rebuilt engine. Prototype and separate-project work are labelled; backlog-only ideas are excluded.</p></aside>
+    <main id="updates" tabindex="-1" aria-label="Rune updates"></main>
+  </div>
+  <footer class="footer"><div class="wrap"><p>Descriptions summarize documented local work. “Implemented” means the feature exists in the development builds; it does not mean every map, device or multiplayer scenario has been verified.</p><p>Public feature catalogue. Game source, original game assets and runtime binaries are not included.</p><p>Self-contained HTML · No online services or external assets required.</p></div></footer>
+  <noscript><div class="wrap"><p class="fatal">Enable JavaScript to display the catalogue and open the detailed descriptions. All content is embedded in this file; no internet connection is needed.</p></div></noscript>
+  <script type="application/json" id="update-data">
+[
+  {
+    "id": 1,
+    "title": "Native 64-bit engine",
+    "status": "Implemented",
+    "brief": "The game, editor and command-line tools run as native x64 applications.",
+    "detail": "RuneEVO64 carries the reverse-engineered native engine into a 64-bit Windows build while retaining Rune's original content formats. Rune64 is the game frontend, RuneEd64 is the classic editor frontend, and UCC64 supplies command-line compilation and processing.",
+    "implementation": "The project uses Visual Studio 2022 and dependency-ordered build scripts. Native layouts, pointer-sized fields and package interfaces have been adapted so original scripts can call the rebuilt engine.",
+    "evidence": "The project records successful native builds and retail-map loading. Later feature tests use these x64 executables with unchanged original game packages.",
+    "limits": "A source checkout still needs owned game content and compatible build dependencies. A fully reproducible release build is a separate acceptance task."
+  },
+  {
+    "id": 2,
+    "title": "Modern rendering backends",
+    "status": "Prototype",
+    "brief": "Modern D3D9/D3D9Ex paths, plus an experimental D3D12 renderer.",
+    "detail": "The renderer has developed beyond the original Rune backend, with D3D9Ex presentation, Shader Model 3 programs, dynamic vertex buffers and cached graphics state. A separate D3D12 backend provides an additional experimental rendering path.",
+    "implementation": "D3D9 uses texture pooling, discard/no-overwrite buffers, cached shaders and blend/filter state. D3D12 includes a direct skeletal path, with narrower material and lighting coverage than the established CPU renderer.",
+    "evidence": "Renderer audits document controlled visual and timing comparisons for individual paths. D3D9 is the main backend used by the recent private feature demos.",
+    "limits": "D3D12 is not certified as a complete replacement. Individual optimizations and presentation modes can regress particular workloads and remain selectable experiments."
+  },
+  {
+    "id": 3,
+    "title": "Improved frame pacing",
+    "status": "Implemented",
+    "brief": "Configurable frame limits and more consistent timing, including when audio is disabled.",
+    "detail": "Frame limiting and client pacing were corrected so the game can target an explicit refresh-rate budget without relying on the presence of audio. The work separates simulation timing, frame throughput and presentation waits when measuring performance.",
+    "implementation": "The renderer includes a high-resolution waitable-timer limiter with sleep/spin/overshoot measurements, while the game exposes a configurable client frame-rate limit. D3D9Ex presentation latency is also configurable.",
+    "evidence": "The Git history records the no-audio pacing repair and controlled Rune comparisons. Renderer notes include sustained capped runs and frame-time measurements.",
+    "limits": "A capped demo's displayed FPS is not its maximum throughput. Driver, display and presentation settings still affect latency and frame-time tails."
+  },
+  {
+    "id": 4,
+    "title": "Corrected raw mouse input",
+    "status": "Implemented",
+    "brief": "Reliable raw movement with device, focus and capture handling; older input modes remain available.",
+    "detail": "The raw-input handler now transports physical relative counts without cursor warps or Windows pointer acceleration. It accepts valid device-less reports, including precision-touchpad cases, and converts absolute reports using independent per-device baselines.",
+    "implementation": "Registration targets the actual viewport window. Capture/focus changes reset baselines; unfocused reports are ignored. Packet sizes, signed wheel deltas, button transitions and WM_INPUT cleanup are handled explicitly. MouseInputStatus exposes diagnostics.",
+    "evidence": "Input-math checks passed 8,000-report movement sums and device/focus cases. Ruben confirmed the corrected mouse worked, and his log showed both relative and device-less/absolute reports reaching the handler.",
+    "limits": "Rune's script sensitivity and smoothing still apply. Broader mouse hardware, polling rates and every Alt+Tab/menu sequence have not been individually verified."
+  },
+  {
+    "id": 5,
+    "title": "GPU skeletal skinning",
+    "status": "Prototype",
+    "brief": "Supported character and item meshes can be deformed on the GPU, with a CPU fallback.",
+    "detail": "Hardware skinning moves supported skeletal vertex deformation away from the CPU. The established CPU path remains available for materials, flags or rendering modes that the direct GPU path cannot reproduce safely.",
+    "implementation": "Static skeletal geometry and section information are cached, while the evaluated joint pose is supplied to shaders. Later modular-character, joint-control and outline fixtures exercise this infrastructure.",
+    "evidence": "Recorded fixtures compare CPU/GPU poses, silhouettes, materials and section visibility. The joint-control fixture passes 56 checks on each path, and two-sided rendering has matched CPU/GPU masks.",
+    "limits": "Support and defaults depend on the runtime profile. Some lighting/material cases fall back; this is not a claim that every character or scene benefits from GPU skinning."
+  },
+  {
+    "id": 6,
+    "title": "Skeletal performance improvements",
+    "status": "Implemented",
+    "brief": "Animation and mesh work reuse validated caches, with faster deformation and batching paths.",
+    "detail": "The engine reduces repeated skeletal work through compressed-frame offset caches, a streamlined x64 CPU skin loop, cached geometry and improved submission organization. These changes preserve a fallback to the older exact paths.",
+    "implementation": "Animation cache entries validate packed frame/joint records. The CPU deformation loop avoids repeated call overhead, while the renderer can batch and sort compatible skeletal work and compact ranges.",
+    "evidence": "The CPU skin-loop fixture produced 7,650 bit-identical transformed vertices. Animation samples matched the linear decoder; some improvements were small or performance-neutral in the measured scenes.",
+    "limits": "Correctness infrastructure is not automatically an FPS gain. Full-frame benefit depends on how much time a scene spends in animation, lighting, uploads and draw calls."
+  },
+  {
+    "id": 7,
+    "title": "Improved skeletal LOD",
+    "status": "Implemented",
+    "brief": "Cached reduction levels avoid shared-mesh corruption and choose detail independently for each actor.",
+    "detail": "Rune's authored SCM collapse data is decoded into immutable geometry views instead of mutating a mesh shared by multiple actors. Each actor can choose its own reduction level without changing another actor's geometry.",
+    "implementation": "The cache builds 17 reduction buckets with compact triangles and referenced-vertex lists. Per-actor hysteresis reduces level churn. An optional normalized screen-size selector adds FOV-aware selection; original distance selection remains available.",
+    "evidence": "Stock Ragnar's authored stream validates from full detail down to its far representation. Controlled crowd tests recorded lower vertex work and frame time; the optional ScreenLOD selector has separate measurements.",
+    "limits": "This is automatic use of existing SCM reduction data. Importing artist-authored manual LOD meshes and broader visual selection tuning remain backlog work."
+  },
+  {
+    "id": 8,
+    "title": "BSP rendering experiments",
+    "status": "Separate experiment",
+    "brief": "Private benchmarks explore geometry reuse, indexed submission, lightmap uploads and visibility costs.",
+    "detail": "A separate performance investigation reduces repeated work around native BSP traversal and world rendering. Candidates include retained geometry, bulk fan indices, state batching, lightmap-atlas comparisons, fewer staging locks and lazy diagnostic clocks.",
+    "implementation": "Eligible paths retain native visibility/light ordering and refresh native lighting pixels. Unsupported materials, movers, effects or views fall back. Alternative visibility representations were also measured, including candidates that were rejected for being slower.",
+    "evidence": "The handoff records controlled image/oracle checks and corrected fixed-frame QPC measurements across Hildir, DwarfForge and Osiris fixtures. Results vary by workload and repeat.",
+    "limits": "Much of this work lives in the separate UT2004 benchmark workspace. General Rune/UT2004 performance parity remains unproven; experimental flags are not a blanket upgrade to every map."
+  },
+  {
+    "id": 9,
+    "title": "Fixed directional sunlight",
+    "status": "Prototype",
+    "brief": "Sunlight can bake world shadows and illuminate actors consistently with sun and shade.",
+    "detail": "A separately named SunLight actor provides fixed-direction sunlight through sky surfaces. The world bake and actor illumination use the same direction so characters, creatures and mesh props respond to exposed and shaded positions.",
+    "implementation": "Native baking is independent of a conventional point-light radius. Actor sunlight visibility is cached, and CPU/GPU diffuse paths share the contribution. Optional sharpness and finer bake spacing change shadow quality.",
+    "evidence": "Private standalone, dedicated/listen, late-join/reconnect and render comparisons passed. Sharpness comparisons checked that fully lit brightness stayed consistent.",
+    "limits": "The sun is fixed. Moving day/night sunlight and a new real-time shadow system were excluded from this slice; broader maps, moving brushes and older hardware remain unverified."
+  },
+  {
+    "id": 10,
+    "title": "Shadow controls",
+    "status": "Prototype",
+    "brief": "Choose player shadows, all skeletal shadows, blob shadows or no shadows in the extended video menu.",
+    "detail": "Local presets expose Rune's projected and blob shadow choices in one place. Held weapons follow the player's shadow setting, while dropped skeletal weapons can participate in the all-skeletal mode.",
+    "implementation": "DGL SHADOWMODE updates PlayerShadows and ActorShadows. The separate EvoModularUI video menu supplies the selector; original RMenu is preserved. The showcase uses mixed characters and creatures to inspect silhouettes.",
+    "evidence": "Recorded tests compare preset pixels, verify held/dropped axe participation and exercise the actual Options > Video controls. The showcase also verified 19 active casters.",
+    "limits": "All-skeletal does not include every legacy vertex mesh. Proposed 32/64/128 budgets, richer quality controls and broad crowded-map performance validation remain separate work."
+  },
+  {
+    "id": 11,
+    "title": "Pickup outlines",
+    "status": "Prototype",
+    "brief": "Optional gold, cyan or purple highlighting helps identify an aimed or nearby pickup.",
+    "detail": "The D3D9 prototype outlines one visible, uncarried skeletal pickup at a time. A nearby aimed item takes priority, using the item's actual skeletal joint collision boxes; otherwise the nearest eligible visible pickup is selected.",
+    "implementation": "A narrow edge and softer outer shell reuse sampled joint poses and cached GPU sections. The effect is client-local, off by default and configurable by colour/distance through the console or extended video menu.",
+    "evidence": "Two-axe targeting captures verify selection changes. Dark Hildir captures verify all three colours, and the effect was checked with global GPU skinning disabled.",
+    "limits": "General teammate/actor marking, CPU-only or vertex-mesh contours, masked materials and portal/mirror/MSAA/device-reset coverage remain unfinished. Frame cost is not broadly certified."
+  },
+  {
+    "id": 12,
+    "title": "PNG transparency pipeline",
+    "status": "Implemented",
+    "brief": "True-colour PNG imports retain smooth transparency through BC3, with a paletted fallback.",
+    "detail": "The editor/UCC PNG pipeline now keeps a compressed true-colour copy for D3D9 alongside Rune's paletted compatibility representation. This lets new portraits, wheel art and effect frames retain intermediate alpha values.",
+    "implementation": "The Windows Imaging Component importer creates BC3 data for true-colour PNGs. Indexed PNGs keep the classic paletted path; COMPRESSION=NONE requests that fallback explicitly. Mipmaps allow larger UI textures to respect lower renderer texture limits.",
+    "evidence": "The import fixture checks BC3 retention and exported paletted fallback. Private wheel captures rendered 512-pixel textures with mips at both tested size limits without a critical error.",
+    "limits": "D3D9 needs S3TC support/settings for the BC3 copy. BatchExport shows the quantized compatibility image, so original PNGs must be retained for accurate alpha authoring."
+  },
+  {
+    "id": 13,
+    "title": "Font support and UI fonts",
+    "status": "Restored",
+    "brief": "TrueType import is available for original-style font objects and newer UI artwork.",
+    "detail": "Rune's TrueType font import path has been restored in the rebuilt toolchain and used for new interface fonts. Font glyphs are baked into texture pages consumed by Canvas, matching the engine's font-object approach.",
+    "implementation": "The kill-feed asset builder imports Segoe UI Semibold at 16 and 20 pixels through TrueTypeFontFactory into its separately named package. Canvas draws the resulting font pages alongside the other feed assets.",
+    "evidence": "The current handoff records direct verification of those import definitions and the native UI captures that use them.",
+    "limits": "This is baked font import, not a new vector-text renderer or unlimited runtime scaling. Original Rune already had a TrueType-based font system; this entry includes restoration and its use by the new UI."
+  },
+  {
+    "id": 14,
+    "title": "Two-sided skeletal materials",
+    "status": "Restored",
+    "brief": "Thin skeletal surfaces now honour texture and polygon-group two-sided flags.",
+    "detail": "A mesh's back faces were being discarded before the renderer considered its actual material flags. The repaired paths resolve two-sidedness early enough for flagged surfaces to remain visible from behind while ordinary neighbouring surfaces still cull.",
+    "implementation": "Effective flags include texture, actor polygroup, imported SCM defaults and modular-section settings. CPU drawing and D3D9 hardware culling follow that policy; the experimental D3D12 path selects a no-cull pipeline where appropriate.",
+    "evidence": "The native fixture covers front/back views, mixed groups, mirrored actors, substitutes, invisible flags and lit/unlit rendering. CPU batches, unbatched and GPU paths matched triangle masks across 24 captures.",
+    "limits": "This preserves existing normals/lighting and adds no thickness. It is a visibility repair, not a new two-sided material-lighting model."
+  },
+  {
+    "id": 15,
+    "title": "Correct skeletal attachments",
+    "status": "Restored",
+    "brief": "Weapons and attached effects follow the evaluated animated joints correctly.",
+    "detail": "Attachment fixes restore the correct hand/back transforms and prevent non-inventory attachments from drifting during large bone rotations. Ragnar's bloodlust eyes are a documented example of the difference between approximate rotator sums and composed joint frames.",
+    "implementation": "Attachment coordinates use the parent dynamic skeleton's matrix-composed joint frame. Tick ordering updates child transforms and dependent effects, while later weapon fixes resolve the current actual JointChild slot.",
+    "evidence": "The attachment regression suite checks slot changes, root joints and stale-child handling. Historical visual fixes document bloodlust-eye drift and one-frame lag; original-server weapon switching/stowing was also exercised.",
+    "limits": "The fixes target reconstructed-engine regressions. Arbitrary custom rigs and every nested attachment/effect combination still need their own coverage."
+  },
+  {
+    "id": 16,
+    "title": "Stowed weapon rendering fixes",
+    "status": "Restored",
+    "brief": "Displaced inventory stays hidden, and attached weapons receive lighting from their current location.",
+    "detail": "Picking up another sword could leave an older owned sword drawn at a stale world position. Stowed items could also become black because their cached BSP region still described an earlier room.",
+    "implementation": "Carried inventory is rendered only when it occupies a real parent JointChild slot, using that same slot for its transform. Attached-inventory lighting queries the current world position without firing gameplay ZoneChange events.",
+    "evidence": "A baseline/fixed Hildir reproduction retained all four weapons and captured the black-to-correct-colour change. Native diagnostics confirmed rejection of unslotted items; the attachment regression passed.",
+    "limits": "Focused standalone and one-owner connected checks cover the reported sequence. Broader maps/renderers and the complete manual multiplayer scenario remain unverified."
+  },
+  {
+    "id": 17,
+    "title": "Smoother animation transitions",
+    "status": "Prototype",
+    "brief": "Interrupted blends preserve continuity, with Legacy, Continuous and Smooth comparison modes.",
+    "detail": "Rapid movement changes could restart a tween from the wrong pose, making the body or head snap. The native repair preserves the interrupted pose and offers an optional eased transition on top of the continuous blend.",
+    "implementation": "Main-body and torso streams are handled separately, including restart/repeated-pass behavior. The private comparison exposes Legacy, Continuous and Smooth; Smooth is Ruben's requested trial default.",
+    "evidence": "Native interrupted/restarted blend fixtures and CPU/GPU comparisons passed. Ruben reported Legacy felt worse and Continuous/Smooth felt close.",
+    "limits": "Authored crouched/upright gait height changes are distinct from tween bugs. Gait phase, full weapon coverage, prolonged gameplay and adverse-network feel still require review."
+  },
+  {
+    "id": 18,
+    "title": "Separate animation packs",
+    "status": "Implemented",
+    "brief": "Reusable animation-only libraries can drive compatible character rigs without dummy geometry.",
+    "detail": "Animations can be exported as their own SCM/UMS content and bound to a compatible primary or substitute character. A character does not need to duplicate the geometry or all animation data simply to use a shared library.",
+    "implementation": "The pack path is separately versioned, validates skeleton compatibility and resolves tracks by name. Retarget modes distinguish full transform sharing from compatible rest-relative/offset use. Substitute characters retain their own materials and polygon groups.",
+    "evidence": "Native library/retarget suites and Ragnar/HOV/substitute fixtures passed. Exported animation-only assets were checked for zero meshes and correct reference-pose handling.",
+    "limits": "General retargeting, arbitrary new weighted bones and full normal-player/combat adoption are not complete. Sharing bone names alone does not establish compatible motion."
+  },
+  {
+    "id": 19,
+    "title": "Networked animation-pack playback",
+    "status": "Implemented",
+    "brief": "Compatible clients download, cache and synchronize shared animation libraries, including late joins.",
+    "detail": "The animation-pack foundation delivers required content to clients and synchronizes cosmetic playback rather than assuming every machine already has the pack. Rejoining clients can reuse downloaded data and late joiners start at the current playback phase.",
+    "implementation": "Protocol 2 uses a replicated manifest, owner readiness and clock RPCs. Per-actor generation, time and speed identify playback state. The fixtures also cover repeat playback and travel cleanup.",
+    "evidence": "Two real clean-cache clients passed multi-pack delivery, downloaded-byte matching, late join, cached reconnect, unsupported-client rejection and a bounded lag/loss case.",
+    "limits": "These are playback/delivery results, not finished combat animation networking or universal Internet certification. Larger/live manifests and normal gameplay integration remain follow-ups."
+  },
+  {
+    "id": 20,
+    "title": "Optional accessory animation tracks",
+    "status": "Implemented",
+    "brief": "One shared body pack can also animate supported character-specific accessories.",
+    "detail": "A common body animation can play on characters that lack an accessory while an expanded compatible primary rig also plays its extra track. The verified example is Kratos's animated bag alongside shared Ragnar/HOV body motion.",
+    "implementation": "Optional-bone validation permits the declared accessory branch without weakening required-body skeleton checks. Script wrappers quote and validate optional-bone lists so the legacy argument parser does not truncate a comma-separated list.",
+    "evidence": "The bag multiplayer fixture checked two clean-cache clients, shared body poses, the extra bag track and late join. The immutable pack contained no geometry, and body hand positions agreed within the recorded small tolerances.",
+    "limits": "This does not add independently weighted runtime bones to an arbitrary existing mesh. Expanded substitute-primary support and unrelated rig families remain separate design work."
+  },
+  {
+    "id": 21,
+    "title": "Native bone dynamics",
+    "status": "Prototype",
+    "brief": "Cosmetic springs add secondary movement to weighted hair, tails and cloth-like chains.",
+    "detail": "The native solver adds angular spring and inertial motion after animation, allowing supported accessory chains to react to movement. It includes tuning controls so stiffness, damping and other responses can be compared without rebuilding the asset.",
+    "implementation": "Actor-local dynamic state handles resets and lifetimes. Quality/distance budgets limit work, an UnrealScript wrapper exposes settings, and the tail room provides a six-slider Save/Reset panel.",
+    "evidence": "Solver checks cover convergence, limits, impulses, settling and timestep behavior. Recorded tail/chain and weighted accessory rooms include ON/OFF, reset and CPU-rendering comparisons.",
+    "limits": "The feature is cosmetic and is not a cloth, rigid-body or PhysX integration. Self/world collision, contacts and broader preset replication/lifecycle coverage remain unfinished."
+  },
+  {
+    "id": 22,
+    "title": "UnrealScript replication notifications",
+    "status": "Implemented",
+    "brief": "Opt-in repnotify properties can trigger OnRepNotify when their replicated values arrive.",
+    "detail": "Scripts can react to received property changes without continuously polling them. The new declaration and callback are opt-in; ordinary replication statements still decide which properties are delivered and to whom.",
+    "implementation": "The compiler and VM/native receive path recognize repnotify and call OnRepNotify with the property name. Receive-bunch boundary handling was corrected so actual UDP callbacks occur at the intended point.",
+    "evidence": "Native serializer/VM/script suites passed, invalid declaration cases were rejected, and actual network callback coverage is documented. Stock Core.u, Engine.u and Editor.u hashes were preserved.",
+    "limits": "Notification is not an authority or delivery guarantee. Broader property combinations and integration scenarios remain in the backlog."
+  },
+  {
+    "id": 23,
+    "title": "Native joint-control API",
+    "status": "Implemented",
+    "brief": "Scripts can rotate bones, aim them at world points and inspect their evaluated directions.",
+    "detail": "A reusable native interface exposes per-joint additive rotation and shortest-arc world-point aiming. Descendant joints and attached actors follow the controlled result while the chosen joint pivot stays fixed.",
+    "implementation": "RotateJoint, AimJointAt, GetJointAxis and ClearJointControl use actor/model-local transient state. Aiming has a deviation cap and stable handling for coincident/opposite directions. Both CPU and GPU skinning consume the same evaluated pose.",
+    "evidence": "The native fixture passed 56 checks on CPU and 56 on GPU, covering invalid inputs, seven directions, limits, independent actors, moving/scaled bodies, attachments and clearing.",
+    "limits": "Controls do not replicate automatically and must be reapplied while active. The mech explicitly distributes aim cues; the generic API is not full limb inverse kinematics."
+  },
+  {
+    "id": 24,
+    "title": "Modular characters",
+    "status": "Prototype",
+    "brief": "Build a character from independently selected head, torso, arm and leg parts.",
+    "detail": "Six semantic body slots let supported stock character donors be combined on one pawn. The native implementation replaces the earlier idea of displaying several synchronized player actors with a composite body driven by one primary pose.",
+    "implementation": "Cached donor-part extraction supplies selected geometry/material sections to CPU and D3D9 rendering. A versioned appearance recipe identifies the parts; the server validates join-time requests and distributes the accepted recipe.",
+    "evidence": "Five stock donors were audited. CPU/GPU composition, cache reuse/cleanup and two-client late-join/reconnect checks are documented; Elder's robe and legs are linked to avoid missing upper legs.",
+    "limits": "The current catalog targets compatible Ragnar rigs and full-detail modular geometry. Arbitrary custom models, broad seams/animation coverage and many-player cost remain open."
+  },
+  {
+    "id": 25,
+    "title": "Expanded character menu",
+    "status": "Prototype",
+    "brief": "Choose parts in a live preview, save locally and use the saved appearance when joining.",
+    "detail": "The extended player menu makes modular setup accessible through named selectors instead of only console commands. It includes all six slots, a both-legs shortcut, linked robe choices, reset and local Save/Cancel behavior.",
+    "implementation": "The preview uses a local actor and the same native appearance builder. Editing or saving does not update the current server; joining/reconnecting registers the saved recipe. The server checks ownership and validates the requested catalog values.",
+    "evidence": "Dedicated-server two-client, late-join/reconnect and listen-host/guest fixtures passed. Saved presets, local preview behavior and rejected foreign-owner requests are documented.",
+    "limits": "Capability negotiation, all relevance/travel scenarios and broader adverse-network menu/appearance coverage remain unfinished. New body catalogs need their own validation."
+  },
+  {
+    "id": 26,
+    "title": "Adjustable body proportions",
+    "status": "Prototype",
+    "brief": "Change limb lengths, shoulders, neck and head size, including exaggerated experimental ranges.",
+    "detail": "Body-shape controls alter compatible characters beyond uniform actor scaling. Symmetric arm/leg lengths, shoulder dimensions, neck and head size are available in the player menu and are carried with the accepted appearance.",
+    "implementation": "Native shaping changes the evaluated skeletal/mesh result and is shared by CPU/GPU drawing. Quantized shape settings are validated and replicated. The playful test permits 25–300% limb/neck ranges while preserving earlier saved choices.",
+    "evidence": "Shape fixtures cover local menu behavior, native geometry and dedicated/listen/reconnect replication. Separate authored cuboid tests demonstrate compatible model-relative proportions and hip-width offsets.",
+    "limits": "Final server-configurable per-control limits, complete reach/contact policy, asymmetry and arbitrary custom-body registration remain open. Exaggerated shapes are not a PvP balance decision."
+  },
+  {
+    "id": 27,
+    "title": "Individual bone thickness",
+    "status": "Prototype",
+    "brief": "Adjust supported body regions and weighted joints without stretching their child chains.",
+    "detail": "Thickness can be changed independently from length for upper arms, forearms, thighs, calves, torso and individually weighted joints. The aim is to make a body broader or slimmer without moving unrelated descendants.",
+    "implementation": "Native deformation blends thickness around joints and modular seams while preserving segment lengths and joint positions. The Bones menu exposes nine 25–300% thickness steps, selected/all reset and local saving; accepted settings travel with the outfit.",
+    "evidence": "Isolation checks across five donors verified unchanged joint positions and unrelated rigid surfaces. CPU/GPU and dedicated/listen/reconnect checks passed.",
+    "limits": "Broader animation/seam inspection, gameplay fitting and final server range policy remain pending. This is not a general sculpting or arbitrary mesh-editing system."
+  },
+  {
+    "id": 28,
+    "title": "Proportional collision",
+    "status": "Prototype",
+    "brief": "Skeletal hit hulls follow customized bodies, with visual collision inspection.",
+    "detail": "Character shaping now has a collision experiment so weapon traces can discover the enlarged or reduced body surfaces. The fixture displays skeletal hit boxes, movement cylinders and skeletons separately, making their different responsibilities visible.",
+    "implementation": "Native joint hit planes are fitted to shaped surfaces, including local thickness. Stable larger bounds keep stretched limbs visible to broad trace discovery. Optional body/crouch fitting is inspected in a separate NPC/player fixture.",
+    "evidence": "Dedicated, listen-server and reconnect checks pass on matching private builds. The player setup has a Show hit boxes option, and the fixture records collision/render relationships.",
+    "limits": "Broad AI navigation, constrained spawns, contacts/combat coverage and final server shape limits remain open. Permission and balance for altered PvP bodies are undecided."
+  },
+  {
+    "id": 29,
+    "title": "Wearable attachments",
+    "status": "Prototype",
+    "brief": "Fit and save a Goblin mask using position, rotation and size controls.",
+    "detail": "The first wearable catalog entry attaches the stock Goblin mask to the character's head. It establishes a path for independently fitted cosmetic equipment while reusing the body pose rather than spawning another animated character.",
+    "implementation": "Local controls store offset, rotation and scale. Native attachment geometry follows the existing head pose, and the saved selection is registered/replicated when joining under the appearance system.",
+    "evidence": "The wearable guide records fitting, local saving and join-time replication checks. The Git history preserves the first fitted-mask implementation.",
+    "limits": "Multiple wearable slots, donor-specific fit presets, helmets/capes/skirts, deformation, cloth, clipping rules and many-player/LOD performance are follow-up work."
+  },
+  {
+    "id": 30,
+    "title": "Modular damage and death handling",
+    "status": "Prototype",
+    "brief": "Mixed bodies can lose selected parts, expose gore caps and settle their corpses on peers.",
+    "detail": "Modular severing now respects the selected donor body parts on owner and observer views. A separate corpse repair addresses bodies that stayed suspended because airborne deaths inherited nonmoving physics and later settling happened only on the server.",
+    "implementation": "Replicated sever bits drive per-actor material-section visibility, gore-cap selection, detached donor parts and projected shadows. ModularCarcass resumes falling when required and reliably distributes its final settled position.",
+    "evidence": "Focused two-client DamageBodyPart cases cover Ragnar/Berserker/Elder torsos and headless/armless captures. Actual Died-based corpse tests passed with two clients plus reconnect at 50 ms and 250 ms/8% loss.",
+    "limits": "Complete death/gore/skin sequences, authored-map contacts and broad combat remain unfinished. These bounded results do not close every modular playable-integration task."
+  },
+  {
+    "id": 31,
+    "title": "Controller/body separation groundwork",
+    "status": "Prototype",
+    "brief": "A controller bridge and body policies separate player intent from supported creature-specific behavior.",
+    "detail": "The EvoControl experiment begins separating input/session intent from the playable body's gait, collision, animation and abilities. It provides common plumbing for the human, dwarf and mech without claiming unrestricted possession of any existing monster actor.",
+    "implementation": "A separately named controller works through a PlayerPawn compatibility bridge. CreatureBodyPolicy chooses model-specific movement, camera, proxy and equipment behavior while Rune's connection and prediction paths still use the pawn.",
+    "evidence": "Controller fixtures and the later live creature-switching tests exercise this first slice. Form changes preserve pawn/player identity and connection in supported sessions.",
+    "limits": "Persistent independent controllers, arbitrary-creature possession, AI handoff and a broader native/replication migration remain future work. Ruben deferred further possession work in favor of networking."
+  },
+  {
+    "id": 32,
+    "title": "Movement-networking experiments",
+    "status": "Prototype",
+    "brief": "Selectable buffering/send policies and UT99 v469-inspired saved moves run with Rune physics.",
+    "detail": "The private player compares inherited movement with input-boundary buffering, faster-send policies and a v469-inspired merged-move/substep mode. These experiments measure delivery and corrections while keeping Rune's gameplay movement rules.",
+    "implementation": "Mode 3 stores and merges moves, sends body rotation/fire bits and replays server substeps with per-packet corrections. The earlier custom reliable attack relay was removed at Ruben's request; current attacks use Rune's normal path.",
+    "evidence": "Two-client/reconnect fixtures cover movement, pushes, Tarp launches, ropes and climbing, including 250 ms simulated RTT with 8% loss. Some short-fire/ack gates at that impairment still failed and are retained as open results.",
+    "limits": "Exact native v469 parity, full UDK-style restore/resimulation, remote smoothing, bandwidth, jitter/reordering and adversarial speed coverage are unfinished. This is not finished multiplayer netcode."
+  },
+  {
+    "id": 33,
+    "title": "Rope movement improvements",
+    "status": "Prototype",
+    "brief": "Predict grabs, climb with W/S and release using jump, Use or Duck with current facing.",
+    "detail": "The extension repairs natural rope grabs that briefly succeeded locally while the server remained in walking physics. It also clears stale same-rope lockouts, supports repeat climbs and prevents release from automatically grabbing again inside the same overlap.",
+    "implementation": "Validated grab/release requests use server distance/state checks. Vertical input travels through movement/replay; rope state enters flying physics. Jump-off uses the owner's current body yaw rather than the yaw at initial contact.",
+    "evidence": "Natural-input two-cycle ascent/descent/jump tests passed in stock and v469 modes at about 250 ms/8% loss. Separate two-client/reconnect fixtures exercise jump, Use and Duck release.",
+    "limits": "Manual Hildir feel and observer visuals remain pending. One high-impairment observer-facing run exceeded its acknowledgement-age gate, so that setting is not fully verified."
+  },
+  {
+    "id": 34,
+    "title": "BSP ledge-climb improvements",
+    "status": "Prototype",
+    "brief": "Local grabs start sooner, and torso/leg climb clips stay aligned through correction and exit.",
+    "detail": "Low-ledge climbing could wait for a delayed server state before animating, or leave the torso in pull-up after the legs finished. The extension predicts a valid local grab and synchronizes both animation streams across the climb lifecycle.",
+    "implementation": "Local wall/top traces near jump apex call Rune's actual GrabEdge. EdgeHanging starts and frame-aligns body and proxy clips, seeds missing correction data, restores movement clips on exit and ignores stale visual replay.",
+    "evidence": "The 120-unit natural-input fixture completed 15/15 climbs at 250 ms/8% loss, with local animation beginning before server correction. Separate 150-unit and repeated observer synchronization checks passed.",
+    "limits": "This does not automatically solve every authored Hildir ledge or creature pull-up animation. Manual camera-angle review and broader maps remain open."
+  },
+  {
+    "id": 35,
+    "title": "Remote-player animation fixes",
+    "status": "Prototype",
+    "brief": "Corrected facing, crouch offsets, pain recovery and return-to-idle behavior in the extension player.",
+    "detail": "Several two-window regressions were traced to differences among owner, server and simulated observer state. Fixes address a 180-degree facing error, a stale crouch mesh offset, pain clips that stayed frozen and incomplete return to weapon idle.",
+    "implementation": "Movement sends pawn body rotation instead of camera yaw. Observer handling clears stale PrePivot offsets during/after crouch. Owner and proxy recovery use completed-clip/state checks while preserving Rune's chosen attack and pain rules.",
+    "evidence": "Focused two-client/reconnect tests passed facing, active/released crouch and pain recovery cases. Actual HandAxe hits were checked at normal and impaired settings, with a missed owner pain animation packet retained as an open result.",
+    "limits": "The exact original manual hit/view needs broader review, and packet loss can still lose an individual cosmetic reaction. The fixes are in the separate ControlledPlayer path."
+  },
+  {
+    "id": 36,
+    "title": "Reconnect networking fix",
+    "status": "Implemented",
+    "brief": "A departed client's UDP error no longer blocks receiving active players' packets.",
+    "detail": "Windows can report a connection-reset error after UDP traffic reaches a peer that has disappeared. The old receive pass stopped at that error, starving movement and acknowledgements belonging to other still-connected players.",
+    "implementation": "The native driver treats the relevant error as per-peer and continues draining available packets. Strengthened fixtures abruptly disconnect and reconnect one client while another remains active under delayed/lossy traffic.",
+    "evidence": "The previous DLL fails the targeted regression while the repaired driver passes repeated reconnects with both tested buffering policies. Detailed reports identify the original receive-starvation failure.",
+    "limits": "This removes one reproduced networking blocker. It does not establish complete correction, bandwidth, jitter/reordering or Internet behavior for every new feature."
+  },
+  {
+    "id": 37,
+    "title": "Lever interaction recovery",
+    "status": "Prototype",
+    "brief": "Fixed a reproduced dedicated-server lever-use lock in the private controller extension.",
+    "detail": "A separate Hildir test reproduced a player becoming stuck around completion of a lever interaction. The repair restores the supported movement/action flow after the use sequence in EvoControl.",
+    "implementation": "The separately named extension handles the problematic lever completion/recovery path. The test distinguishes this from Ruben's earlier random turning report, which occurred before lever use and belonged to the input investigation.",
+    "evidence": "The handoff records two-client lever activation/recovery checks at 50 ms and 250 ms/8% loss. Dedicated probe source and diagnosis notes retain the reproduction context.",
+    "limits": "The lever repair does not explain every earlier input symptom. It also does not implement lever-operated gate traversal for navigation bots; that provider is still proposed."
+  },
+  {
+    "id": 38,
+    "title": "Runtime mirrored maps",
+    "status": "Prototype",
+    "brief": "Load or host maps as Normal, X-mirrored or Y-mirrored without editing their original assets.",
+    "detail": "The host can choose a reflected world when starting a map and distribute the variant before clients load it. The menu supports local play, immediate hosting and synchronized server map changes without restarting Rune.",
+    "implementation": "Native reflection covers BSP collision/lighting and movers. Host/admin policy controls map requests; guests cannot change the hosted map. Authored world-weapon placement uses the reflected orientation frame. X+Y is hidden in the menu; Z inversion is deferred.",
+    "evidence": "Local, dedicated and listen fixtures passed seven successive same/different-map loads with two guests, plus authenticated admin, late-join and reconnect cases. Eight Hildir weapon types passed placement/angle comparisons.",
+    "limits": "Campaign scripts, asymmetric props, AI paths, maplists, save/hub behavior, adverse-network travel and real LAN/Internet sessions remain follow-up coverage."
+  },
+  {
+    "id": 39,
+    "title": "Playable woodland dwarf",
+    "status": "Prototype",
+    "brief": "Select the dwarf in the player menu and use its native movement, combat and equipment.",
+    "detail": "The woodland dwarf is a supported player form rather than only an NPC. The same pawn, connection, player identity and inventory remain in use when switching between supported human and dwarf forms; the selection survives normal respawn.",
+    "implementation": "A body policy and animation proxy preserve the stock dwarf's 32-joint model and 47 clips while separating locomotion from torso actions. Form changes validate idle state and clearance, rebuild rig-specific attachments and reapply the selected form after restart.",
+    "evidence": "The original form matrix passed 291 assertions across standalone, dedicated lag/loss/rejoin and listen sessions. Native model/event preservation and menu preview checks are documented.",
+    "limits": "Manual feel, broad combat/observer/death coverage and automatic human-to-creature invasion rules remain open. Arbitrary monster possession is not implemented."
+  },
+  {
+    "id": 40,
+    "title": "Dwarf equipment and abilities",
+    "status": "Prototype",
+    "brief": "One-handed weapon attacks, shield retention, forward shield push, jumping and ledge climbing.",
+    "detail": "Both dwarf variants keep their creature equipment rules while supporting player control. Strong weapons use native one-handed dwarf attacks so shields can remain equipped. Holding defense and double-tapping straight forward triggers the two-phase shield push.",
+    "implementation": "Equipment maintenance preserves/reattaches shields across pickups and switches. Native dwarf Jump and pullup/pullupB clips enable movement actions; upper and lower animation streams are coordinated for the shield charge/push.",
+    "evidence": "Equipment fixtures passed 630 standalone and 630 joined-owner checks. Subsequent shield/jump/climb work passed 396 focused assertions across the variants and a lag/loss owner session.",
+    "limits": "Manual combat feel and wider observer integration remain pending. Stronger throws, look-pitch-dependent push, a whole-body native/Ragnar toggle and a reported long-pullup visual remain backlog items."
+  },
+  {
+    "id": 41,
+    "title": "Ragnar-animation dwarf variant",
+    "status": "Prototype",
+    "brief": "A separate dwarf form shares rest-relative Ragnar locomotion and weapon-specific attacks.",
+    "detail": "The experiment applies Ragnar animation to the dwarf while retaining a dwarf body and equipment policy. It uses the reviewed rest-relative preview mode, rather than replacing the normal creature launcher's native dwarf animation set.",
+    "implementation": "Name-mapped tracks skip unmatched bones and transfer supported motion relative to the rigs' rest transforms. Real weapon attacks/combos and locomotion use the shared mode, while native dwarf clips handle selected inventory/recovery actions and shield behavior.",
+    "evidence": "The standalone playable fixture passed 733 checks and 36 gear trials plus 27 starter/lifecycle checks. All 32 sampled joints matched the selected preview mode; the later mech integration retained a quick compatibility regression.",
+    "limits": "Full multiplayer integration and Ruben's manual feel review remain unfinished. This is a bounded dwarf experiment, not general retargeting for every creature."
+  },
+  {
+    "id": 42,
+    "title": "Playable dwarfmech",
+    "status": "Prototype",
+    "brief": "Control five native attack modes, attack while moving and plant or unplant the mech.",
+    "detail": "The dwarfmech player form supplies claw strike, low saw, high spin, propeller and paired rockets. Rune power cycles modes; defense plus attack temporarily fires rockets, and taunt toggles the planted stance when the mech is idle.",
+    "implementation": "Private body/proxy/weapon classes adapt native clips, blade sweeps and authority-spawned rockets. A generated local rig isolates the upper branch from walking pelvis rotation while preserving native tracks/notifies. Respawn restores equipment and the selected body.",
+    "evidence": "Recorded fixtures passed 153 standalone and 161 authority/owner/observer checks, plus menu, inspector and aim cases. They include all attack modes and normal death/respawn with lag/loss.",
+    "limits": "The mech has no native jump/climb clip, so those actions are disabled. Broader arm severing, listen/Internet play, combat balance and final split-pose visual review remain unfinished."
+  },
+  {
+    "id": 43,
+    "title": "Mech aiming and camera",
+    "status": "Prototype",
+    "brief": "Aim both wrists at the crosshair from a wall-aware shoulder camera, with self-hit guards.",
+    "detail": "Shooting mode uses an automatic right-shoulder view and a common crosshair target so the two rocket wrists converge on the intended point. Native arm controls follow look pitch with a visual limit while projectile direction retains actual aim pitch.",
+    "implementation": "A swept camera trace avoids BSP walls, and aim traces skip owned attachments/projectiles. Melee restores the normal camera. Guarded blades reject wielder/owned equipment at filtering, damage and effect stages; rockets reject shooter/attachments on contact.",
+    "evidence": "The camera fixture passed 22 checks including real near/far hits and preserved enemy/environment damage. Bone API CPU/GPU suites and impaired observer aim-cue checks passed.",
+    "limits": "The exact original self-damage report was not reproduced in its initial moving-attack context. The exposed stock dispatch path was fixed; broader observer/armour/severing cases and final camera feel remain open."
+  },
+  {
+    "id": 44,
+    "title": "15-weapon selection wheel",
+    "status": "Prototype",
+    "brief": "Hold Q to choose an illustrated carried weapon, with gold or ice presentation.",
+    "detail": "The wheel displays all 15 weapon slots with carried and unavailable states. Normal gameplay uses owned inventory, freezes camera rotation while selecting and equips a valid carried choice when the wheel is released.",
+    "implementation": "Mouse-rate input is converted into time-correct screen movement before ordinary camera processing, with the smoothing tail cleared on release. Accepted full-colour weapon artwork uses saved per-slot framing; themes tint the surrounding UI without changing inventory rules.",
+    "evidence": "The connected input probe passed 40 checks covering selection, cancel/hold, camera lock and release behavior. Gold/ice captures and unavailable-versus-owned centre checks passed.",
+    "limits": "The wheel is in a separate private script package. Physical feel, observers and broader renderer/map coverage remain follow-up work; a sharing copy does not certify original Rune 1.06."
+  },
+  {
+    "id": 45,
+    "title": "Live 3D wheel previews",
+    "status": "Prototype",
+    "brief": "Actual weapon meshes float gently in the centre, with saved per-weapon framing controls.",
+    "detail": "A local actor viewport shows the selected carried weapon as its real native mesh instead of relying solely on the wedge illustration. The latest motion is a slow figure-eight translation with a fixed authored angle, replacing earlier spin experiments.",
+    "implementation": "The preview actor does not replicate. The F6 editor pins a slot, lets arrows change position and plus/minus change scale, and saves all 15 values. Pause/resume retains motion phase; unavailable normal slots leave the centre empty.",
+    "evidence": "Connected tuning and 3D actor probes checked all meshes, framing, materials, constant rotation, pause/resume, save/reload, reuse and cleanup. Ruben's saved centres are retained as defaults.",
+    "limits": "The framing editor does not change the wedge illustration. The explicit authoring mode may show unowned meshes, while ordinary gameplay remains inventory-only. Other rendering backends remain unverified."
+  },
+  {
+    "id": 46,
+    "title": "Weapon-selection queue and pain recovery",
+    "status": "Prototype",
+    "brief": "The latest owned choice waits for legal equip timing and survives supported pain interruptions.",
+    "detail": "Selecting a weapon while the proxy is busy no longer has to lose the request. A valid newest choice replaces the pending choice and waits for an allowed idle/walking opportunity. Hits during stow/retrieve preserve intent while letting the player react to pain.",
+    "implementation": "Death, missing weapon/arm, direct keys, spectator/match end and travel clear the queue; temporary menus/states retain it. Recovery restarts the appropriate legal switching flow after pain instead of skipping a required attachment phase.",
+    "evidence": "Queue probes passed 42 standalone and 42 online-owner checks. Real-hit switching probes passed 264 standalone and 264 online-owner checks, covering all three attachment phases and attacks afterward.",
+    "limits": "Observer visuals and manual feel remain pending. The historical late-hit unusable-weapon symptom was not reproduced by the baseline fixture, so that exact failure is not claimed fixed."
+  },
+  {
+    "id": 47,
+    "title": "Animated kill-feed prototype",
+    "status": "Prototype",
+    "brief": "Portrait/name/cause rows arrive, stack and expire with independently timed effects; events are synthetic.",
+    "detail": "The private Canvas feed reproduces the reviewed flat layout with complete portraits, mirrored victim faces and separate row lifetimes. Arrival follows the timed reference: a sliding/thickening white line, overlapping victim/centre reveals and a later stationary killer reveal.",
+    "implementation": "Each row owns its birth time, effect phase and expiry. Shared settings drive browser/native renderers; a 32-frame circle can start independently for each arrival. The manual demo injects a 42-sample cycle and allows replay, single events and held phases.",
+    "evidence": "The latest native probe passed 35 captures, including arrival/expiry, independent animation, both panel themes and icon-stop behavior, with no ScriptWarning/Critical and unchanged stock packages.",
+    "limits": "Real death, killer/victim/team/avatar attribution, authoritative headshot/cause routing and multiplayer are not connected yet. This is a rendering demonstration, not a live match kill feed."
+  },
+  {
+    "id": 48,
+    "title": "Kill-feed themes and icons",
+    "status": "Prototype",
+    "brief": "Six colours, black/coloured panels, 15 weapon pairs, spinning throws and headshot/environment icons.",
+    "detail": "The native demo uses Ruben's saved Straight poses for normal attacks and Stylized endpoints for throws. Throws complete three turns before settling, while an optional static head icon marks headshot samples. Ice, crushing, shield, stomp, burning and falling causes are included.",
+    "implementation": "Thirty static weapon-pose textures and 480 baked spin frames avoid needing arbitrary Canvas rotation. Black panels are uniform 85% opaque; coloured panels fade from 85% at outer names to 25% at portraits. The latest chosen green/yellow/orange tones are saved.",
+    "evidence": "All 15 pairs and six causes load in the native probe. Three-turn stop times, saved endpoints, theme changes without age resets and 16 opacity comparisons passed; original pose backups remained intact.",
+    "limits": "Icons/themes currently present synthetic metadata. New pose choices require rebaking/rebuilding private textures; palette changes load on launch. Real team/cause/headshot attribution remains pending."
+  },
+  {
+    "id": 49,
+    "title": "External UI authoring tools",
+    "status": "Tooling",
+    "brief": "Review animations in a browser and save shared settings, palettes and independent icon poses.",
+    "detail": "The UI tools shorten the design loop outside Rune. The feed editor shares its definition with the native demo, while the icon workshop lets Ruben author rotations, flips, spin timing/direction and final throw poses without overwriting the other preset.",
+    "implementation": "The loopback editor validates saves, merges selected palette values and creates exact prior-file backups. Straight and Stylized presets are separate. Export builds transparent frame atlases/settings, and the end-position view holds the final throw pose for editing.",
+    "evidence": "Browser persistence, invalid-input, backup/merge, runtime-copy, preset-isolation and exact endpoint checks are documented. The latest native build matches Ruben's saved sets and three selected colour changes.",
+    "limits": "A browser change is not automatically running-game hot reload. Pose edits require native asset rebuilds; palette/settings are read on the documented launch path. Future design changes retain the HTML review workflow."
+  },
+  {
+    "id": 50,
+    "title": "Portrait and weapon-art pipeline",
+    "status": "Tooling",
+    "brief": "Native captures, stylized assets and review catalogues organize the UI artwork.",
+    "detail": "The asset workflow pairs actual game captures with stylized portraits and weapon illustrations, preserving identity and weapon geometry for review. Catalogues track character/skin keys and make missing artwork visible rather than inventing completed coverage.",
+    "implementation": "Capture helpers produce stock weapon and character views. The avatar builder decodes/hashes existing images, checks unique class/skin entries and creates a manifest plus review pages. Wheel source framing and accepted user revisions are retained separately.",
+    "evidence": "The recorded avatar audit contains 35 captures, 12 stylized appearances and 23 missing artworks. Weapon-wheel rendering probes exercise the accepted 15 illustrated slots and actual centre meshes.",
+    "limits": "The full portrait roster and wider HUD/team-score layout are unfinished. A decoded or catalogued image is not automatically final visual approval, and original source artwork remains local."
+  },
+  {
+    "id": 51,
+    "title": "Native Recast/Detour navigation",
+    "status": "Prototype",
+    "brief": "Build a clearance-aware navmesh from Rune geometry and query complete walking routes.",
+    "detail": "Recast/Detour 1.6.0 is integrated as a native level service, independent of stock Unreal PathNode routing. The first profile targets Ragnar-sized walking, including radius erosion, headroom, steps and slope constraints.",
+    "implementation": "Solid BSP triangles are converted to Recast coordinates with corrected winding. A level owns the mesh/query and releases it on destruction; an unsuccessful explicit rebuild keeps the prior mesh. Queries reject partial/truncated routes and use bounded scratch storage.",
+    "evidence": "The private navigation lab and Hildir demo exercise native builds, endpoints and real bot movement. Debug edges/routes and profile/build statistics expose the generated data.",
+    "limits": "Builds are synchronous and currently use one profile per level. General tiled/offline caching, dynamic obstacle providers, multiple agent sizes and multiplayer AI integration remain future work."
+  },
+  {
+    "id": 52,
+    "title": "Autonomous bot journeys",
+    "status": "Prototype",
+    "brief": "Bots combine walking, safe falls/jumps, supported lifts and proximity doors to reach real destinations.",
+    "detail": "Bots now plan across supported walking components instead of wandering forever on one floor or immediately reversing an elevator ride. The planner prices complete walking lengths and directed traversal costs, then continues toward the original final goal after each action.",
+    "implementation": "Bounded Dijkstra planning combines cached full-body-validated air links and actual lift docks. Lifts use real trigger/base physics. Supported proximity doors preserve floor continuity and are crossed through sensor re-entry/reservations; lever/use gates stay blocked.",
+    "evidence": "The current Hildir records cover safe airborne arrivals, both automatic lifts, door entry/exit and destination completion. The final documented mesh has 259 polygons/five components, with 53 usable native air candidates after lift-shaft exclusions.",
+    "limits": "These are bounded standalone explorer bots, without tactical combat, inventory or crowd separation. Lever providers, general moving platforms and unsupported map components remain outside the slice."
+  },
+  {
+    "id": 53,
+    "title": "Improved bot steering",
+    "status": "Prototype",
+    "brief": "Normal run speed, validated lookahead and gradual turning replace repeated corner slowdowns.",
+    "detail": "The first wandering controller slowed at every intermediate corner. Revised steering keeps Ragnar's 315 run speed on ordinary path legs, looks into clear outgoing segments and brakes deliberately for final destinations or action alignment.",
+    "implementation": "Corner padding is accepted only when adjacent walking segments and body clearance remain valid. Redundant corners are removed conservatively. Lookahead shortens when a live segment test fails, and body yaw follows actual movement with a bounded turn rate.",
+    "evidence": "The obstacle-room fixture measures corner speed, low-speed time, route duration, yaw rate and stuck recoveries. The journey notes distinguish walking improvements from intentional waits at lifts/doors/launches.",
+    "limits": "This is local path following, not general live-obstacle replanning or crowd avoidance. Tight geometry and traversal entries can still require controlled slowing."
+  },
+  {
+    "id": 54,
+    "title": "Authored traversal prototype",
+    "status": "Prototype",
+    "brief": "A demonstrated Hildir climb can continue onto a locally validated narrow beam.",
+    "detail": "Ruben's actual traversal recording supplied one climb/beam example that the eroded walking mesh alone could not represent. The private executor uses Rune's stock grab/step-up behavior and a local floor strip for the following narrow walk.",
+    "implementation": "The demonstrated approach, obstacle and landing/support information are used to validate a bounded action. Ordinary physics executes the climb and walking. It does not publish every thin surface as globally reachable or reverse every safe drop into a climb.",
+    "evidence": "The handoff and narrow-floor guide record the single implemented Hildir example and its native support/body-clearance checks. Earlier capture analysis preserves the source player demonstration.",
+    "limits": "Automatic full-map climb discovery, a global thin-floor graph, reverse-climb links and persistence of multiple authored traversal types remain proposed work."
+  },
+  {
+    "id": 55,
+    "title": "Navigation inspection tools",
+    "status": "Tooling",
+    "brief": "Inspect meshes/routes, follow bots or play normally, and record player traversal demonstrations.",
+    "detail": "The private navigation demo is also an inspection surface. It can show mesh edges, blocked borders, bot paths/goals and aimed player routes while switching between a playable Ragnar, free camera and a selected bot follow view.",
+    "implementation": "The follow camera has independent orbit/zoom; controls pause bots and rebuild the mesh. F11 marks feet/aimed obstacle data, and F10 records a real climb/drop/jump/dodge/lift trip into a visible trail and log. Debug lines have distance/count budgets.",
+    "evidence": "The documented Hildir and obstacle-room fixtures exercise camera, route and recording controls. Real player captures informed the beam example and later traversal decisions.",
+    "limits": "Recordings are developer evidence, not a finished multi-action authoring database. The visible trail is bounded, and recordings do not automatically authorize all discovered movement links."
+  },
+  {
+    "id": 56,
+    "title": "Surf game mode",
+    "status": "Prototype",
+    "brief": "CS-inspired ramp surfing and air strafing with tuning presets, run timing and session records.",
+    "detail": "EvoSurf adds a continuous course mode built around speed-preserving ramp travel and air control. Leaving the start begins a run; falling or requesting restart returns to the beginning, and reaching the finish records a session best without checkpoints.",
+    "implementation": "Independent fixed-step movement uses Rune collision with GO-inspired air/ground acceleration, friction and jumping. F5 compares presets, F6 displays settings, console tuning marks custom rules, and first/third-person views share corrected presentation.",
+    "evidence": "First Flight checks at 30/144/240 FPS and all-preset Switchback routes total 637 recorded assertions. They cover actual contacts, jumping, friction, restart, finish and preset-record separation.",
+    "limits": "The presets are independently implemented comparisons, not exact CS2/subtick physics. Session records are not persistent, and a future custom surfing animation is still pending."
+  },
+  {
+    "id": 57,
+    "title": "Four original Surf courses",
+    "status": "Prototype",
+    "brief": "First Flight, Switchback, Cavern Curves and Grand Circuit provide increasingly complex routes.",
+    "detail": "The local map set starts with a short introductory ramp course, expands to eight-ramp Switchback, then adds segmented cave banks and openings. Grand Circuit extends the route to about 75,000 units with large bends, returns and three drop shafts.",
+    "implementation": "Recipe-driven builders create separately named BSP maps. Seeded constrained proposals and native collision/contact validation support the curved course. A fixed-step guide bot uses ordinary production input rather than teleporting along a saved trajectory.",
+    "evidence": "Recorded map fixtures check native geometry, safe starts, ramp contacts, full-course completion and finish landing. Grand Circuit and the crest/bevel repair have separate documented results.",
+    "limits": "Manual difficulty/flow review is still requested. Motion-first random feasible course generation remains a proposed next step; the existing generator does not guarantee arbitrary random geometry is playable."
+  },
+  {
+    "id": 58,
+    "title": "Surf multiplayer",
+    "status": "Prototype",
+    "brief": "Server-authoritative surfing includes client prediction, replay and authoritative finish records.",
+    "detail": "A separate SurfNetGame runs the same course with two real clients on a dedicated server. Each player has an independent run/restart/best, while shared online movement rules are locked so local tuning cannot award incompatible records.",
+    "implementation": "Sequenced inputs are batched/resubmitted, bounded by server time and clamped input. Snapshots acknowledge fixed steps; clients restore/replay unacknowledged input after mismatches. Camera/body correction and peer interpolation smooth presentation; epochs discard pre-restart commands.",
+    "evidence": "Dedicated two-client/reconnect fixtures passed local and delayed/lossy cases, including 30/240 FPS peers, full finishes, blocked tuning, peer animation and correction of an injected client error.",
+    "limits": "The launcher binds loopback, and records last for the session. Public Internet deployment, large player counts, downloads and broader adversarial validation are not certified by those local fixtures."
+  },
+  {
+    "id": 59,
+    "title": "Portal prototype",
+    "status": "Prototype",
+    "brief": "Paired live portal views support wall, floor and ceiling traversal with recursive rendering.",
+    "detail": "The portal experiment renders linked openings and lets a normal Ragnar cross them while transforming position, movement and first-person view orientation. Wall fitting, edge clipping, facing pairs and upright recovery were refined in separate fixtures.",
+    "implementation": "Native corridor/exit-clearance checks gate traversal, including horizontal openings and launch/fall loops. Descendant views render before parents, with bounded recursion and progressive darkness. The normal player test includes first/third-person switching.",
+    "evidence": "Dedicated portal guides record wall, floor/ceiling, rim-entry, recovery and recursive-view checks. The 13-stage mirror regression was also reused during voxel work.",
+    "limits": "Server-authoritative/network integration, broad particle/translucent rendering, third-person split/clipped bodies and recursive-view performance polish remain unfinished."
+  },
+  {
+    "id": 60,
+    "title": "Native voxel sandbox",
+    "status": "Prototype",
+    "brief": "Editable block terrain has collision, chunk streaming, background generation and saved edits.",
+    "detail": "The standalone native voxel experiment adds a separate block world while retaining Rune's player/actor system. Players mine and build using configurable brushes; seeded terrain and versioned edits make worlds reproducible and preserve earlier generator saves.",
+    "implementation": "32-unit blocks are stored in vertical sections, meshed with hidden-face removal/greedy grouping and cached D3D9 buffers. Bounded streaming uses a persistent worker; native walking/traces consult the terrain, and edits publish newly exposed faces/lighting.",
+    "evidence": "Core, concurrency and private game fixtures cover terrain, edits, seams, collision and saved versions. Later loading work measured improvement on one fixed development-PC route.",
+    "limits": "Development is paused and the command path is standalone-only. Host authority, edit/chunk synchronization, late-join transfer, multiplayer rebasing and general AI support remain unimplemented."
+  },
+  {
+    "id": 61,
+    "title": "Large voxel environments",
+    "status": "Prototype",
+    "brief": "Separate island, woodland, alpine and Lantern Grove worlds include distant horizons and origin shifting.",
+    "detail": "Versioned generators explore different landscape scales and environments instead of replacing one saved world in place. Woodland adds forests/meadows/snow, alpine adds high terrain and a distant background, and the grove supplies a smaller camp/lantern setting.",
+    "implementation": "Standalone floating-origin shifts maintain local coordinates, including vertical recentering for alpine terrain. Nearby full geometry can extend to the documented 1,024 m radius; an 8 km background heightfield represents distant alpine land within a much larger bounded world.",
+    "evidence": "Recorded landscape, horizon, island/torch and grove fixtures passed with their own save versions. Guides distinguish actual near terrain from the far heightfield.",
+    "limits": "This is bounded terrain, not an infinite world or complete distant 3D voxel LOD. Large radii have loading/memory costs, and multiplayer origin handling is absent."
+  },
+  {
+    "id": 62,
+    "title": "Voxel lighting and scenery",
+    "status": "Prototype",
+    "brief": "Skylight, torches, day/night, foliage, stars, clouds and narrow lantern/timber props.",
+    "detail": "Block lighting reacts to open/closed terrain, while lamps/lava and the carried Rune torch provide warm illumination. Environment layers add sun/moon shading, day/night sky/fog changes, plants, tree cards, simple wind and the grove's fences, beams and lanterns.",
+    "implementation": "Propagated skylight/emissive channels coexist with a bounded cached RGB torch field, avoiding terrain remesh on every torch move. Foliage/props use cached batches; narrow collision matches supported timber pieces. Stars and drifting block-cloud patches use the sky pass.",
+    "evidence": "Torch/terrain edit, foliage overlap, embedded-light, sky/day-night and grove checks are documented. Light removal and terrain closures are tested independently of screenshots.",
+    "limits": "Fog is distance fog, not volumetric lighting. Terrain/tree cast sun shadows, flowing fluids, saved weather/clock and old-PC quality budgets remain future work."
+  },
+  {
+    "id": 63,
+    "title": "Modern editor tools",
+    "status": "Tooling",
+    "brief": "RuneEd64 and the ImGui RuneEdShell provide native editing plus a local MCP interface.",
+    "detail": "The x64 editor stack includes a classic-style frontend and a separate shell suitable for both manual and programmatic work. The shell exposes map loading, engine commands, statistics and logs through a local command service.",
+    "implementation": "RuneEdShell's MCP server connects through the Blender bridge's Python tooling on loopback. Additional reflected-property commands can read/change actor values, including array elements, using transactions and PostEditChange. Map discovery includes original-game content.",
+    "evidence": "The compatibility update records editor property/map workflow checks and longer timeouts for long operations. The project readme documents executable roles and command entry points.",
+    "limits": "This is not the proposed complete skeletal editor or FBX pipeline. Later editor-shell migration work is tracked separately from this development snapshot."
+  },
+  {
+    "id": 64,
+    "title": "Blender level-editing bridge",
+    "status": "Tooling",
+    "brief": "Read/edit Rune brushes in Blender and use the native engine to rebuild and save maps.",
+    "detail": "BlenderRune connects Blender authoring with Rune's own CSG/BSP/lighting logic. Existing maps can expose brush geometry and decoded texture/material previews, while edits are sent back through a native ABI bridge rather than approximating the game format.",
+    "implementation": "runebridge.dll and Python/add-on layers read/write brushes, perform incremental carving or full rebuilds and save maps. Coordinate/rotation conversions and editor-style navigation keep the Blender view aligned with native results.",
+    "evidence": "Smoke/round-trip tooling and the project charter document map load/save, brush read/write, native rebuild and reopening an editable brush in RuneEd64 with the rest of the map intact.",
+    "limits": "The documented bridge baseline does not finish texture assignment for every new face, general actor editing, lightmap authoring, a Blender app template or a UCC panel."
+  },
+  {
+    "id": 65,
+    "title": "SCM character-fitting tools",
+    "status": "Tooling",
+    "brief": "Fit a connected editing rig to a new body, mirror it and prepare a Rune-compatible reference copy.",
+    "detail": "The Character Fitting panel in the SCM add-on provides a controlled authoring workflow for body proportions and skeleton placement. It keeps the working mesh/rig separate from the final prepared Rune copy so fitting and paint can be revised.",
+    "implementation": "Editable connected bones can be centred and mirrored on Rune's left/right axis. Preparation restores the native hierarchy/order/axes, fills omitted joints from stored parent offsets and limits exported influences to the supported strongest two. Explicit skeleton/mesh inputs support fresh projects.",
+    "evidence": "Blender registration/reopen, centring, mirroring, sparse-rig restoration and reference conversion checks passed. Cuboid motion and authored hip-width experiments separately exercise stock Ragnar sharing.",
+    "limits": "The current manual-fit/cuboid workflow is not proof that arbitrary custom bodies are registered for gameplay. Final complex-body weights, game appearance, combat hulls and multiplayer need their own checks."
+  },
+  {
+    "id": 66,
+    "title": "Skin-weight inspection and cleanup",
+    "status": "Tooling",
+    "brief": "Inspect connected influences, select unwanted patches and prepare supported weights without losing the working paint.",
+    "detail": "Weight tools help isolate disconnected influence islands and remove accidental cross-body connections during fitting. Optional connected-surface previews are separate objects, allowing pose/paint inspection before any preview weights are adopted.",
+    "implementation": "Tools select disconnected patches, remove selected/exact-zero weights and share an adjustable small-weight cutoff. Preparation preserves the working mesh and emits a strongest-two-weight copy. A separate cuboid routine assigns rigid boxes to allowed Rune joints.",
+    "evidence": "Graph and Blender deformation checks verify no unintended hip/leg influence on the reviewed arm previews. The fitted cuboid has 18 boxes/144 vertices, each at one allowed bone with weight 1.0, without moving fitted rest joints.",
+    "limits": "Automatic cleanup does not replace manual facial islands, seams and animation-quality review. Optional previews are not silently adopted by Prepare, and runtime four-influence support remains unimplemented."
+  },
+  {
+    "id": 67,
+    "title": "Animation inspection labs",
+    "status": "Tooling",
+    "brief": "Browse all 612 Ragnar catalogue entries, step frames and compare dwarf/mech poses and LODs.",
+    "detail": "Dedicated viewers make existing animation content inspectable without implementing a new attack first. The Ragnar browser supports filters, frame stepping, native/half speed, phase-preserving pause and a persistent marked shortlist; related dwarf/mech labs inspect retarget and split-pose behavior.",
+    "implementation": "Three duplicate Ragnar names use private aliases so all catalogue entries can be reached without altering stock Players.ums. The dwarf lab exposes native/rest-relative comparisons, and the mech inspector steps all 17 LOD levels with matched original/custom views.",
+    "evidence": "The Ragnar browser passed 2,468 standalone checks across all entries and controls. The dwarf lab's documented fixture passed 147 checks; the current mech inspector records 613 checks.",
+    "limits": "Viewers are cosmetic authoring tools. Saved punch/kick candidates do not implement the proposed FIST weapon, and the animation-lab clock does not solve general high-FPS Slomo."
+  },
+  {
+    "id": 68,
+    "title": "Asset correctness fixes",
+    "status": "Restored",
+    "brief": "Repaired substitute sampling/materials, attachment behavior and saved skeletal animation events.",
+    "detail": "The reconstructed engine had asset paths that diverged from original Rune: substitute models could resolve/sample animations incorrectly or use the wrong material groups, and saved imported skeletal models could lose frame-event names.",
+    "implementation": "Native substitute resolution follows the proper source animation while keeping visible-model materials. Skeletal serialization visits frame-event FNames during package tagging so WeaponActivate, DoThrow and DoStow survive a round trip. Attachment regressions cover updated joint-slot behavior.",
+    "evidence": "Native substitute/attachment suites passed. Dwarf package verification compares all saved events with the stock model and preserves its 47 clips, 711 frames and 25 native notifications.",
+    "limits": "These repair known asset compatibility paths; they do not establish unrestricted skeleton conversion, arbitrary extra weighted bones or full custom-content import coverage."
+  },
+  {
+    "id": 69,
+    "title": "Original-content compatibility repairs",
+    "status": "Restored",
+    "brief": "Restored important networking, cinematic, lighting, rope, combat and menu behavior in the x64 port.",
+    "detail": "Compatibility work repairs rebuilt-native regressions while retaining original packages/maps. It covers package-generation negotiation, real Rune server discovery, cinematic cuts/splines/effects, special-light channels, mover lighting, TrialPit cage/beam geometry and snowbeast lunge ballistics.",
+    "implementation": "Native layout/Canvas fields match stock script expectations; package GUID/generation handling avoids needless downloads. Other fixes repair skeletal lighting/normals, menu preview occlusion, near-wall alpha, joint dynamics and unsafe non-owning skeletal texture-cache references.",
+    "evidence": "The September compatibility update reports native retail-math comparisons for cinematics, light predicates, beam geometry and ballistic velocity, plus stock-package hashes and user-confirmed server/rope/snowbeast cases.",
+    "limits": "Historical original-server checks do not certify every newer extension. Longer online/menu gameplay and audio acceptance were not completed by those compatibility fixtures."
+  },
+  {
+    "id": 70,
+    "title": "Development and verification tooling",
+    "status": "Tooling",
+    "brief": "Isolated launchers, native probes, captures and package checks make changes reproducible and reviewable.",
+    "detail": "The project includes feature-specific test packages and private runtimes so experiments can be exercised without replacing the user's original game packages. Helpers prepare maps/assets, start owned sessions and retain logs/reports/captures for comparison.",
+    "implementation": "Suites combine native/script assertions, actual server/client processes, simulated delay/loss, reconnects, source/package hashes and image/pose oracles. Timing collectors distinguish fixed-frame measurements from diagnostic or capped samples.",
+    "evidence": "Each major feature links its recorded suite and limits in the source notes. The backlog separates proposed work from verified slices, and source-only checkpoints exclude generated assets and binaries.",
+    "limits": "Passing a bounded fixture is not equivalent to full-game or public-server certification. Owned content, private captures, generated packages and runtime DLLs remain local and are not a distributable release."
+  },
+  {
+    "id": 71,
+    "title": "Separate UT2004 world-architecture experiments",
+    "status": "Separate experiment",
+    "brief": "Private fixtures run Rune gameplay on imported compiled-world data and compare rendering/collision behavior.",
+    "detail": "A separate benchmark workspace investigates Rune actors, scripts, movement, combat and HUD on UT2004-derived compiled world geometry/lighting/collision structures. It is distinct from both ordinary Rune BSP optimization and porting Ragnar into UT2004 gameplay.",
+    "implementation": "The Hildir fixture loads compiled static BSP/section/atlas data and compares native traces against a real UT oracle. Direct-section and optional visibility paths are measured separately. Later rendering experiments inspect exact world data, retained sections and collision integration.",
+    "evidence": "The handoff records a possessed Ragnar with Rune HUD, eight ray/box sweeps matching the oracle within the documented tolerance and 43 trace/zone probes. Static sample timings are explicitly limited to their fixtures/views.",
+    "limits": "This work is maintained in a separate research workspace. Full Hildir special surfaces, movers, mixed texture sizes, gameplay contacts and general map parity remain unfinished; it is not a complete engine migration."
+  }
+]
+  </script>
+  <script>
+    "use strict";
+    const groups=[
+      ["engine","Engine & performance",1,8],["graphics","Graphics & animation",9,17],
+      ["animation","Animation systems",18,23],["characters","Modular characters",24,30],
+      ["movement","Movement & networking",31,38],["creatures","Playable creatures",39,43],
+      ["interface","Interface & artwork",44,50],["navigation","Bot navigation",51,55],
+      ["surf","Surf mode",56,58],["worlds","Portals & voxel worlds",59,62],
+      ["tools","Editors & authoring",63,67],["compatibility","Compatibility & research",68,71]
+    ];
+    const kind={Implemented:"implemented",Prototype:"prototype",Restored:"restored",Tooling:"tooling","Separate experiment":"separate"};
+    const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
+    function paragraphBlock(title,text){const block=el("div");block.append(el("h4","",title),el("p","",text));return block;}
+    const updates=JSON.parse(document.getElementById("update-data").textContent);
+    const main=document.getElementById("updates"),nav=document.getElementById("topics");
+    for(const [id,title,first,last] of groups){
+      const link=el("a","",title);link.href="#"+id;link.append(el("span","topic-count",String(last-first+1)));nav.append(link);
+      const section=el("section","section");section.id=id;section.setAttribute("aria-labelledby",id+"-heading");
+      const heading=el("div","section-header"),h2=el("h2","",title);h2.id=id+"-heading";
+      heading.append(h2,el("span","section-range",String(first).padStart(2,"0")+"–"+String(last).padStart(2,"0")));section.append(heading);
+      for(const update of updates.filter(item=>item.id>=first&&item.id<=last)){
+        const key=String(update.id).padStart(2,"0");const article=el("article","feature");article.id="update-"+key;article.setAttribute("aria-labelledby","title-"+key);
+        const number=el("span","number",key);number.setAttribute("aria-hidden","true");const body=el("div","feature-body"),top=el("div","feature-top"),h3=el("h3","",update.title);h3.id="title-"+key;
+        const badge=el("span","badge",update.status);badge.dataset.kind=kind[update.status];top.append(h3,badge);body.append(top,el("p","brief",update.brief));
+        const button=el("button","detail-toggle");button.type="button";button.setAttribute("aria-expanded","false");button.setAttribute("aria-controls","detail-"+key);button.setAttribute("aria-label","Detailed description: "+update.title);
+        button.append(el("span","toggle-label","Detailed description"));const symbol=el("span","toggle-symbol","+");symbol.setAttribute("aria-hidden","true");button.append(symbol);
+        const detail=el("div","detail");detail.id="detail-"+key;detail.hidden=true;detail.append(paragraphBlock("What changed",update.detail),paragraphBlock("How it works",update.implementation));
+        const grid=el("div","detail-grid");grid.append(paragraphBlock("Recorded verification",update.evidence),paragraphBlock("Remaining scope",update.limits));detail.append(grid);
+
+        body.append(button,detail);article.append(number,body);section.append(article);
+      }main.append(section);
+    }
+    main.addEventListener("click",event=>{const button=event.target.closest(".detail-toggle");if(!button)return;const open=button.getAttribute("aria-expanded")!=="true";button.setAttribute("aria-expanded",String(open));document.getElementById(button.getAttribute("aria-controls")).hidden=!open;button.querySelector(".toggle-label").textContent=open?"Hide detailed description":"Detailed description";button.querySelector(".toggle-symbol").textContent=open?"−":"+";button.setAttribute("aria-label",(open?"Hide detailed description: ":"Detailed description: ")+document.getElementById(button.getAttribute("aria-controls")).closest(".feature").querySelector("h3").textContent);});
+  </script>
+</body>
+</html>
